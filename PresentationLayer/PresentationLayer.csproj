@@ -76,6 +76,12 @@
     <Compile Include="FrmKhuyenMai.Designer.cs">
       <DependentUpon>FrmKhuyenMai.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmLapOrder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmLapOrder.Designer.cs">
+      <DependentUpon>FrmLapOrder.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmPhanQuyen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -120,6 +126,12 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FrmLapOrder.resx">
+      <DependentUpon>FrmLapOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmQuanLyBan.resx">
+      <DependentUpon>FrmQuanLyBan.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
