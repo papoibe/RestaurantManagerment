@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace PresentationLayer
 {
-    public partial class FrmDangNhap: Form
+    public partial class FrmLogin: Form
     {
-        public FrmDangNhap()
+        public FrmLogin()
         {
             InitializeComponent();
         }
