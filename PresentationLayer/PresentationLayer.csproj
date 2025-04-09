@@ -52,18 +52,6 @@
     <Compile Include="FrmBaoCao.Designer.cs">
       <DependentUpon>FrmBaoCao.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmDangKy.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmDangKy.Designer.cs">
-      <DependentUpon>FrmDangKy.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FrmDangNhap.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmDangNhap.Designer.cs">
-      <DependentUpon>FrmDangNhap.cs</DependentUpon>
-    </Compile>
     <Compile Include="FrmDonHang.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -82,6 +70,12 @@
     <Compile Include="FrmLapOrder.Designer.cs">
       <DependentUpon>FrmLapOrder.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmLogin.Designer.cs">
+      <DependentUpon>FrmLogin.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmPhanQuyen.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -99,12 +93,6 @@
     </Compile>
     <Compile Include="FrmQuanLyBep.Designer.cs">
       <DependentUpon>FrmQuanLyBep.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FrmQuanLyKhachHang.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmQuanLyKhachHang.Designer.cs">
-      <DependentUpon>FrmQuanLyKhachHang.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmQuanLyKho.cs">
       <SubType>Form</SubType>
@@ -128,6 +116,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FrmLapOrder.resx">
       <DependentUpon>FrmLapOrder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmLogin.resx">
+      <DependentUpon>FrmLogin.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmQuanLyBan.resx">
       <DependentUpon>FrmQuanLyBan.cs</DependentUpon>
