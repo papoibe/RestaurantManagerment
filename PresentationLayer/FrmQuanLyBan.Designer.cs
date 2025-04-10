@@ -32,17 +32,15 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.tầngTrệtToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lầuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mangVềToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.chínToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.sốngToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.beeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.grabToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.shopeeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.mangVềToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.chínToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.sốngToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.button1 = new System.Windows.Forms.Button();
+            this.fLPBan = new System.Windows.Forms.FlowLayoutPanel();
             this.menuStrip1.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -73,6 +71,27 @@
             this.lầuToolStripMenuItem.Size = new System.Drawing.Size(46, 24);
             this.lầuToolStripMenuItem.Text = "Lầu";
             // 
+            // mangVềToolStripMenuItem
+            // 
+            this.mangVềToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.chínToolStripMenuItem,
+            this.sốngToolStripMenuItem});
+            this.mangVềToolStripMenuItem.Name = "mangVềToolStripMenuItem";
+            this.mangVềToolStripMenuItem.Size = new System.Drawing.Size(80, 24);
+            this.mangVềToolStripMenuItem.Text = "Mang về";
+            // 
+            // chínToolStripMenuItem
+            // 
+            this.chínToolStripMenuItem.Name = "chínToolStripMenuItem";
+            this.chínToolStripMenuItem.Size = new System.Drawing.Size(126, 26);
+            this.chínToolStripMenuItem.Text = "Chín";
+            // 
+            // sốngToolStripMenuItem
+            // 
+            this.sốngToolStripMenuItem.Name = "sốngToolStripMenuItem";
+            this.sốngToolStripMenuItem.Size = new System.Drawing.Size(126, 26);
+            this.sốngToolStripMenuItem.Text = "Sống";
+            // 
             // beeToolStripMenuItem
             // 
             this.beeToolStripMenuItem.Name = "beeToolStripMenuItem";
@@ -97,57 +116,25 @@
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
             // 
-            // flowLayoutPanel1
+            // fLPBan
             // 
-            this.flowLayoutPanel1.Controls.Add(this.button1);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(12, 31);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(812, 436);
-            this.flowLayoutPanel1.TabIndex = 13;
-            // 
-            // mangVềToolStripMenuItem
-            // 
-            this.mangVềToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.chínToolStripMenuItem,
-            this.sốngToolStripMenuItem});
-            this.mangVềToolStripMenuItem.Name = "mangVềToolStripMenuItem";
-            this.mangVềToolStripMenuItem.Size = new System.Drawing.Size(80, 24);
-            this.mangVềToolStripMenuItem.Text = "Mang về";
-            // 
-            // chínToolStripMenuItem
-            // 
-            this.chínToolStripMenuItem.Name = "chínToolStripMenuItem";
-            this.chínToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.chínToolStripMenuItem.Text = "Chín";
-            // 
-            // sốngToolStripMenuItem
-            // 
-            this.sốngToolStripMenuItem.Name = "sốngToolStripMenuItem";
-            this.sốngToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
-            this.sốngToolStripMenuItem.Text = "Sống";
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(3, 3);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(177, 128);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
+            this.fLPBan.Location = new System.Drawing.Point(12, 31);
+            this.fLPBan.Name = "fLPBan";
+            this.fLPBan.Size = new System.Drawing.Size(812, 436);
+            this.fLPBan.TabIndex = 13;
             // 
             // FrmQuanLyBan
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1112, 502);
-            this.Controls.Add(this.flowLayoutPanel1);
+            this.Controls.Add(this.fLPBan);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "FrmQuanLyBan";
             this.Text = "FrmQuanLyBan";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.flowLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -161,11 +148,10 @@
         private System.Windows.Forms.ToolStripMenuItem grabToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem shopeeToolStripMenuItem;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private System.Windows.Forms.FlowLayoutPanel fLPBan;
         private System.Windows.Forms.ToolStripMenuItem mangVềToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem chínToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem sốngToolStripMenuItem;
-        private System.Windows.Forms.Button button1;
     }
 }
 
