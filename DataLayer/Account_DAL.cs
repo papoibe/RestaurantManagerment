@@ -41,11 +41,12 @@ namespace DataLayer
         {
             try
             {
-                string sql = "INSERT INTO TaiKhoan (TenDangNhap, MatKhau, TenHienThi) VALUES (@Username, @Password, @DisplayName)";
+                string sql = "INSERT INTO TaiKhoan (TenDangNhap, MatKhau, TenHienThi, MaLoai) VALUES (@Username, @Password, @DisplayName, @MaLoai)";
                 SqlCommand cmd = new SqlCommand(sql, cn);
                 cmd.Parameters.AddWithValue("@Username", account.Username);
                 cmd.Parameters.AddWithValue("@Password", account.Password);
                 cmd.Parameters.AddWithValue("@DisplayName", account.DisplayName);
+                cmd.Parameters.AddWithValue("@MaLoai", account.Maloai);
                 Connect();
                 int result = cmd.ExecuteNonQuery();
                 return result > 0;
@@ -59,7 +60,6 @@ namespace DataLayer
                 DisConnect();
             }
         }
-
         //kiem tra ton tai tai khoan
         public bool CheckAccountExists(string username)
         {

@@ -29,6 +29,10 @@ namespace PresentationLayer
                 string username = txt_Username.Text.Trim();
                 string password = txt_Password.Text;
                 string displayName = txt_DisplayName.Text.Trim();
+                int maloai = 2; // 2 la nhan vien, 1 la admin nhung de mac dinh cho nhanh thi ta cho nhan vien
+
+                // gan gia tri mac dinh maloai la 2 
+
                 //kiem tra thong tin nhap vao
                 if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(displayName))
                 {
@@ -37,7 +41,7 @@ namespace PresentationLayer
                     return;
                 }
                 //tao doi tuong Account
-                Account_DTO account = new Account_DTO(username, password, displayName);
+                Account_DTO account = new Account_DTO(username, password, displayName, maloai);
                 //goi phuong thuc dang ky
                 if (accountBL.Register(account))
                 {
@@ -62,5 +66,7 @@ namespace PresentationLayer
         {
             this.Close();
         }
+
+        
     }
 }

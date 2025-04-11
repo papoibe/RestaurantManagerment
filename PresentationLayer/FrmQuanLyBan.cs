@@ -12,7 +12,6 @@ using BusinessLayer;
 using TransferObject;
 
 
-
 namespace PresentationLayer
 {
     public partial class FrmQuanLyBan : Form

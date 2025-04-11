@@ -62,6 +62,7 @@ namespace DataLayer
             {
                 throw ex;
             }
+
             finally
             {
                 DisConnect();
