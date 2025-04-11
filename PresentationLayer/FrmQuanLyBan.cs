@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using System.Data.SqlClient;
 using BusinessLayer;
 using TransferObject;
+using PresentationLayer.Menu;
 
 
 namespace PresentationLayer
@@ -72,9 +73,15 @@ namespace PresentationLayer
 
             if (ban != null)
             {
-                MessageBox.Show($"Bạn đã chọn bàn: {ban.TenBan}\nTrạng thái: {(ban.TrangThai ? "Trống" : "Đang sử dụng")}",
-                                "Thông tin bàn", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                FrmLapOrder frmLapOrder = new FrmLapOrder(ban);
+                DialogResult result = frmLapOrder.ShowDialog();
+                banBL.CapNhatBan(ban);
+
+                //Menu.FrmMiCay frmMiCay = new Menu.FrmMiCay(ban);
             }
+            banBL.CapNhatBan(ban);
+            btnBan.Text= ban.TenBan;
+            btnBan.BackColor = ban.TrangThai ? Color.Green : Color.Red;
         }
 
     }
