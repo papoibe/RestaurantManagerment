@@ -112,6 +112,42 @@
     <Compile Include="FrmThanhToan.Designer.cs">
       <DependentUpon>FrmThanhToan.cs</DependentUpon>
     </Compile>
+    <Compile Include="Menu\FrmCombo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\FrmCombo.Designer.cs">
+      <DependentUpon>FrmCombo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\FrmDoUong.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\FrmDoUong.Designer.cs">
+      <DependentUpon>FrmDoUong.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\FrmKhaiVi.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\FrmKhaiVi.Designer.cs">
+      <DependentUpon>FrmKhaiVi.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\FrmLau.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\FrmLau.Designer.cs">
+      <DependentUpon>FrmLau.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\FrmMiCay.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\FrmMiCay.Designer.cs">
+      <DependentUpon>FrmMiCay.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Menu\FrmMonPhu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Menu\FrmMonPhu.Designer.cs">
+      <DependentUpon>FrmMonPhu.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FrmLapOrder.resx">
