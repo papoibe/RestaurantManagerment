@@ -31,8 +31,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btn_exit = new System.Windows.Forms.Button();
             this.btn_DangNhap = new System.Windows.Forms.Button();
-            this.txt_MatKhau = new System.Windows.Forms.TextBox();
-            this.txt_DangNhap = new System.Windows.Forms.TextBox();
+            this.txt_Password = new System.Windows.Forms.TextBox();
+            this.txt_Username = new System.Windows.Forms.TextBox();
             this.lb_MatKhau = new System.Windows.Forms.Label();
             this.lb_TaiKhoan = new System.Windows.Forms.Label();
             this.lb_head = new System.Windows.Forms.Label();
@@ -57,6 +57,7 @@
             this.btn_exit.TabIndex = 12;
             this.btn_exit.Text = "Thoát";
             this.btn_exit.UseVisualStyleBackColor = false;
+            this.btn_exit.Click += new System.EventHandler(this.btn_exit_Click);
             // 
             // btn_DangNhap
             // 
@@ -68,22 +69,23 @@
             this.btn_DangNhap.TabIndex = 11;
             this.btn_DangNhap.Text = "Đăng Nhập";
             this.btn_DangNhap.UseVisualStyleBackColor = false;
+            this.btn_DangNhap.Click += new System.EventHandler(this.btn_DangNhap_Click);
             // 
-            // txt_MatKhau
+            // txt_Password
             // 
-            this.txt_MatKhau.Location = new System.Drawing.Point(430, 259);
-            this.txt_MatKhau.Multiline = true;
-            this.txt_MatKhau.Name = "txt_MatKhau";
-            this.txt_MatKhau.Size = new System.Drawing.Size(433, 42);
-            this.txt_MatKhau.TabIndex = 10;
+            this.txt_Password.Location = new System.Drawing.Point(430, 259);
+            this.txt_Password.Multiline = true;
+            this.txt_Password.Name = "txt_Password";
+            this.txt_Password.Size = new System.Drawing.Size(433, 42);
+            this.txt_Password.TabIndex = 10;
             // 
-            // txt_DangNhap
+            // txt_Username
             // 
-            this.txt_DangNhap.Location = new System.Drawing.Point(430, 174);
-            this.txt_DangNhap.Multiline = true;
-            this.txt_DangNhap.Name = "txt_DangNhap";
-            this.txt_DangNhap.Size = new System.Drawing.Size(433, 45);
-            this.txt_DangNhap.TabIndex = 9;
+            this.txt_Username.Location = new System.Drawing.Point(430, 174);
+            this.txt_Username.Multiline = true;
+            this.txt_Username.Name = "txt_Username";
+            this.txt_Username.Size = new System.Drawing.Size(433, 45);
+            this.txt_Username.TabIndex = 9;
             // 
             // lb_MatKhau
             // 
@@ -127,8 +129,8 @@
             this.Controls.Add(this.lb_head);
             this.Controls.Add(this.btn_exit);
             this.Controls.Add(this.btn_DangNhap);
-            this.Controls.Add(this.txt_MatKhau);
-            this.Controls.Add(this.txt_DangNhap);
+            this.Controls.Add(this.txt_Password);
+            this.Controls.Add(this.txt_Username);
             this.Controls.Add(this.lb_MatKhau);
             this.Controls.Add(this.lb_TaiKhoan);
             this.Controls.Add(this.label1);
@@ -145,8 +147,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btn_exit;
         private System.Windows.Forms.Button btn_DangNhap;
-        private System.Windows.Forms.TextBox txt_MatKhau;
-        private System.Windows.Forms.TextBox txt_DangNhap;
+        private System.Windows.Forms.TextBox txt_Password;
+        private System.Windows.Forms.TextBox txt_Username;
         private System.Windows.Forms.Label lb_MatKhau;
         private System.Windows.Forms.Label lb_TaiKhoan;
         private System.Windows.Forms.Label lb_head;

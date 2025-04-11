@@ -15,7 +15,8 @@ namespace DataLayer
 
         public DataProvider()
         {
-            string cnStr = "Data Source=LAPTOP-960OHC3A\\THINH;Initial Catalog=QuanLyQuanAn;Integrated Security=True;Trust Server Certificate=True";
+            //connect to database mỗi người là khác nhau nên vào tool sửa tên lại 
+            string cnStr = "Data Source=LAPTOP-960OHC3A\\THINH;Initial Catalog=QuanLyQuanAn;Integrated Security=True";
             cn = new SqlConnection(cnStr);
         }
 
