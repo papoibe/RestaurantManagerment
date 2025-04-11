@@ -75,9 +75,7 @@ namespace PresentationLayer
             {
                 FrmLapOrder frmLapOrder = new FrmLapOrder(ban);
                 DialogResult result = frmLapOrder.ShowDialog();
-                banBL.CapNhatBan(ban);
-
-                //Menu.FrmMiCay frmMiCay = new Menu.FrmMiCay(ban);
+                banBL.CapNhatBan(ban);                
             }
             banBL.CapNhatBan(ban);
             btnBan.Text= ban.TenBan;
