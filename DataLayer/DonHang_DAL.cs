@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLayer
+namespace DataLayer
 {
-    class MonAn_Module_BL
+    class DonHang_DAL
     {
     }
 }
