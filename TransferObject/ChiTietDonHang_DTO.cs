@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TransferObject
 {
-    public class ChiTietDonHang_DOL
+    public class ChiTietDonHang_DTO
     {
         public int MaChiTietDonHang { get; set; }
         public int MaDonHang { get; set; }
@@ -15,15 +15,16 @@ namespace TransferObject
         public float DonGia { get; set; }
         public float ThanhTien { get; set; }
         public string GhiChu { get; set; }
-        public ChiTietDonHang_DOL(int maChiTietDonHang, int maDonHang, int maMonAn, int soLuong, float donGia, float thanhTien, string ghiChu)
+        public ChiTietDonHang_DTO(int maChiTietDonHang, int maDonHang, int maMonAn, int soLuong, float donGia, float thanhTien, string ghiChu)
         {
             MaChiTietDonHang = maChiTietDonHang;
             MaDonHang = maDonHang;
             MaMonAn = maMonAn;
             SoLuong = soLuong;
             DonGia = donGia;
-            ThanhTien = soLuong*donGia;
+            ThanhTien = soLuong * donGia;
             GhiChu = ghiChu;
         }
+        public ChiTietDonHang_DTO() { }
     }
 }

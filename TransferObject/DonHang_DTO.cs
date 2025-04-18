@@ -6,25 +6,24 @@ using System.Threading.Tasks;
 
 namespace TransferObject
 {
-    public class DonHang_DOL
+    public class DonHang_DTO
     {
         public int MaDonHang { get; set; }
         public int MaBan { get; set; }
         public int MaNhanVien { get; set; }
-        public DateTime NgayTao { get; set; }
-        
-        public bool TrangThai { get; set; }
+        public DateTime NgayLap { get; set; }
+        public int MaTrangThai { get; set; }
         public float GiamGia { get; set; }
         public float TongTien { get; set; }
-
         public string GhiChu { get; set; }
-        public DonHang_DOL(int maDonHang, int maBan, int maNhanVien, DateTime ngayTao, bool trangThai, float giamGia, float tongTien, string ghiChu)
+        public DonHang_DTO() { }
+        public DonHang_DTO(int maDonHang, int maBan, int maNhanVien, DateTime ngayLap, int maTrangThai, float giamGia, float tongTien, string ghiChu)
         {
             MaDonHang = maDonHang;
             MaBan = maBan;
             MaNhanVien = maNhanVien;
-            NgayTao = ngayTao;
-            TrangThai = trangThai;
+            NgayLap = ngayLap;
+            MaTrangThai = maTrangThai;
             GiamGia = giamGia;
             TongTien = tongTien;
             GhiChu = ghiChu;

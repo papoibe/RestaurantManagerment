@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace TransferObject
 {
-    public class LoaiMonAn_DOL
+    public class LoaiMonAn_DTO
     {
         public int MaLoai { get; set; }
         public string TenLoai { get; set; }
         public string MoTa { get; set; }
-        public LoaiMonAn_DOL(int maLoai, string tenLoai, string moTa)
+        public LoaiMonAn_DTO(int maLoai, string tenLoai, string moTa)
         {
             MaLoai = maLoai;
             TenLoai = tenLoai;

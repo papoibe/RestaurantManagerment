@@ -31,5 +31,18 @@ namespace BusinessLayer
         {
             return banDAL.CapNhatBan(ban);
         }
+        public bool CapNhatTrangThaiBan(int maBan, bool trangThai)
+        {
+            return banDAL.CapNhatTrangThaiBan(maBan, trangThai);
+        }
+        public bool GetTrangThaiBan(int maBan)
+        {
+            return banDAL.GetTrangThaiBan(maBan);
+        }
+        public float GetTienBan(int maDonHang)
+        {
+            return banDAL.GetTienBan(maDonHang);
+        }
+
     }
 }
