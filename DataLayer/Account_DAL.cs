@@ -13,17 +13,35 @@ namespace DataLayer
     public class Account_DAL : DataProvider
     {
         //kiem tra dang nhap
-        public bool Login(Account_DTO account)
+        //tra ve thong tin tai khoan
+        public Account_DTO Login(Account_DTO account)
         {
             try
             {
-                string sql = "SELECT COUNT(*) FROM TaiKhoan WHERE TenDangNhap = @Username AND MatKhau = @Password";
+                string sql = "SELECT TenDangNhap, TenHienThi, MaLoai FROM TaiKhoan WHERE TenDangNhap = @Username AND MatKhau = @Password";
                 SqlCommand cmd = new SqlCommand(sql, cn);
                 cmd.Parameters.AddWithValue("@Username", account.Username);
                 cmd.Parameters.AddWithValue("@Password", account.Password);
                 Connect();
-                int count = (int)cmd.ExecuteScalar();
-                return count > 0;
+
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    //tao doi tuong  Account_DTO voi data trong database
+                    Account_DTO account_DTO = new Account_DTO(
+                        reader["TenDangNhap"].ToString(),
+                        account.Password, //giu nguyen mat khau
+                        reader["TenHienThi"].ToString(),
+                        Convert.ToInt32(reader["MaLoai"])
+                    );
+                    reader.Close();
+                    return account_DTO;
+                }
+                else
+                {
+                    reader.Close();
+                    return null; //khong ton tai tai khoan
+                }
             }
             catch (SqlException ex)
             {

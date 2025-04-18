@@ -15,7 +15,7 @@ namespace BusinessLayer
             accountDAL = new Account_DAL();
         }
         //kiem tra dang nhap
-        public bool Login(Account_DTO account)
+        public Account_DTO Login(Account_DTO account)
         {
             try
             {

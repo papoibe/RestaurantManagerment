@@ -40,17 +40,59 @@ namespace PresentationLayer
                 }
 
 
-                //tao doi tuong NhanVien
+                //tao doi tuong 
                 Account_DTO account = new Account_DTO(username, password);
 
+                //goi phuong thuc dang nhap tu BL 
+                Account_DTO accountDTO = accountBL.Login(account);
 
-               
-                //goi phuong thuc dang nhap
-                if (accountBL.Login(account))
+                //kiem tra dang nhap thanh cong
+                if (accountDTO != null)
                 {
-                    //neu dang nhap thanh cong
-                    this.DialogResult = DialogResult.OK;
-                    this.Close();
+                    //neu dang nhap thanh cong, xac dinh ma loai
+                    //neu ma loai = 1 thi la admin
+                    //neu ma loai = 2 thi la nhan vien
+                    if (accountDTO.Maloai == 1) //admin
+                    {
+                        try
+                        {
+                            //neu la admin
+                            //thuc hien mo form admin
+                            FrmAdmin adminForm = new FrmAdmin(accountDTO);
+                            //truyen accountDTO vao form admin
+                            //hien thi form admin   
+                            adminForm.Show();
+                            this.Hide();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+
+                    }
+                    else if (accountDTO.Maloai == 2)
+                    {
+                        try
+                        {
+                            //neu la nhan vien
+                            //thuc hien mo form nhan vien
+                            FrmWorkers workerForm = new FrmWorkers(accountDTO);
+                            //truyen accountDTO vao form nhan vien
+                            //hien thi form nhan vien
+                            workerForm.Show();
+                            this.Hide();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show(ex.Message);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Khong co quyen truy cap!", "loi dang nhap",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
                 }
                 else
                 {
@@ -58,17 +100,6 @@ namespace PresentationLayer
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     txt_Password.Clear();
                     txt_Password.Focus();
-
-
-                    // hien thi lua chon dang ky neu chua co tai khoan
-                    DialogResult result = MessageBox.Show("Ban chua co tai khoan? Dang ky ngay", "Thong bao"
-                        ,MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    if (result == DialogResult.Yes) 
-                    {
-                        FrmDangKy frmDangKy = new FrmDangKy();
-                        frmDangKy.ShowDialog();
-                        this.Show();
-                    }
                 }
             }
             catch (Exception ex)
