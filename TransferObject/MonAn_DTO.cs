@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TransferObject
 {
-    public class MonAn_DOL
+    public class MonAn_DTO
     {
         public int MaMonAn { get; set; }
         public string TenMonAn { get; set; }
@@ -15,7 +15,7 @@ namespace TransferObject
         public string MoTa { get; set; }
         public bool TrangThai { get; set; }
 
-        public MonAn_DOL(int maMonAn, string tenMonAn, int maLoai, float donGia, string moTa, bool trangThai)
+        public MonAn_DTO(int maMonAn, string tenMonAn, int maLoai, float donGia, string moTa, bool trangThai)
         {
             MaMonAn = maMonAn;
             TenMonAn = tenMonAn;

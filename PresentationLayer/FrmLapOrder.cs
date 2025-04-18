@@ -12,51 +12,58 @@ using TransferObject;
 
 namespace PresentationLayer
 {
-    public partial class FrmLapOrder: Form
+    public partial class FrmLapOrder : Form
     {
         public Ban_DTO selectedBan;
         private Ban_BL banBL;
+        public DonHang_DTO donHang = new DonHang_DTO();
+        private DonHang_BL donHangBL = new DonHang_BL();
+        public Action OnOrderSaved;
+
         public FrmLapOrder(Ban_DTO ban)
         {
             InitializeComponent();
             banBL = new Ban_BL();
             selectedBan = ban;
+            donHangBL = new DonHang_BL();
         }
 
         private void FrmLapOrder_Load(object sender, EventArgs e)
         {
-
+            lb_tenBan.Text = selectedBan.TenBan;
+            nUD_SoKhach.Value = selectedBan.SucChua;
+            // chổ này meger code làm tiếp ( load nhân viên vào cbox_PhucVuChinh )
+            // cbox_PhucVuChinh.DataSource = donHangBL.GetAllNhanVien();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.Close();
+            this.Close();   
         }
 
         private void btn_OK_Click(object sender, EventArgs e)
         {
-            try
-            {
-                // Cập nhật trạng thái bàn sang false (đang sử dụng)
-                selectedBan.TrangThai = false;
-
-                // Gọi lớp Business Layer để cập nhật trạng thái bàn
-                bool result = banBL.CapNhatBan(selectedBan);
-
-                if (result)
-                {
-                    MessageBox.Show("Cập nhật trạng thái bàn thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    this.Close(); // Đóng form sau khi cập nhật thành công
-                }
-                else
-                {
-                    MessageBox.Show("Cập nhật trạng thái bàn thất bại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+            selectedBan.SucChua = (int)nUD_SoKhach.Value; // Cập nhật số khách
+            selectedBan.GhiChu = rtxt_Note.Text + "\n Phục vụ chính: " + cbox_PhucVuChinh.Text + "\n Loại Khách: " + cbox_LoaiKhach.Text; // Cập nhật ghi chú
+                                                                                                                                          // Gọi lớp Business Layer để cập nhật trạng thái bà
+            donHang.MaNhanVien = 1; // Giả định mã nhân viên là 1, bạn có thể thay đổi theo yêu cầu
+            donHang.MaBan = selectedBan.MaBan; // Gán mã bàn cho đơn hàng
+            donHang.NgayLap = DateTime.Now; // Gán ngày lập đơn hàng
+            donHang.MaTrangThai = 1; // Giả định trạng thái đơn hàng là 1 (chưa thanh toán), bạn có thể thay đổi theo yêu cầu
+            donHang.GhiChu = selectedBan.GhiChu; // Gán ghi chú cho đơn hàng
+            banBL.CapNhatBan(selectedBan);
+            FrmDonHang frmDonHang = new FrmDonHang(donHang, selectedBan.MaBan);
+            DialogResult result = frmDonHang.ShowDialog();
+            if (result == DialogResult.OK)
+            { 
+                frmDonHang.ShowDialog();
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show("Lỗi khi cập nhật trạng thái bàn: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Close();
             }
+
         }
     }
+
 }
