@@ -132,7 +132,7 @@ namespace DataLayer
         public List<MonAn_DTO> GetMonAnByTen(string tenMonAn)
         {
             List<MonAn_DTO> lst = new List<MonAn_DTO>();
-            string sql = "SELECT * FROM MonAn WHERE TenMonAn LIKE @TenMonAn";
+            string sql = "SELECT * FROM MonAn WHERE TenMonAn LIKE @TenMonAn AND TrangThai = 1";
             try
             {
                 SqlCommand cmd = new SqlCommand(sql, cn);
