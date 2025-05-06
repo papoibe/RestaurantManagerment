@@ -39,5 +39,17 @@ namespace BusinessLayer
         {
             return chiTietDonHangDAL.Delete(chiTiet);
         }
+        public ChiTietDonHang_DTO GetChiTietDonHang(int maChiTiet)
+        {
+            return chiTietDonHangDAL.GetChiTietDonHang(maChiTiet);
+        }
+        public bool Update(ChiTietDonHang_DTO chiTiet)
+        {
+            return chiTietDonHangDAL.Update(chiTiet);
+        }
+        public bool UpdateMaDH(ChiTietDonHang_DTO chiTiet)
+        {
+            return chiTietDonHangDAL.UpdateMaDH(chiTiet);
+        }
     }
 }

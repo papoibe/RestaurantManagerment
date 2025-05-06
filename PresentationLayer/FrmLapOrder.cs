@@ -52,7 +52,7 @@ namespace PresentationLayer
             donHang.MaTrangThai = 1; // Giả định trạng thái đơn hàng là 1 (chưa thanh toán), bạn có thể thay đổi theo yêu cầu
             donHang.GhiChu = selectedBan.GhiChu; // Gán ghi chú cho đơn hàng
             banBL.CapNhatBan(selectedBan);
-            FrmDonHang frmDonHang = new FrmDonHang(donHang, selectedBan.MaBan);
+            FrmDonHang frmDonHang = new FrmDonHang(donHang, selectedBan);
             DialogResult result = frmDonHang.ShowDialog();
             if (result == DialogResult.OK)
             { 

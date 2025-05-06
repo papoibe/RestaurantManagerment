@@ -40,5 +40,9 @@ namespace BusinessLayer
             loaiMonAn_DAL = new LoaiMonAn_DAL();
             return loaiMonAn_DAL.GetAll();
         }
+        public List<MonAn_DTO> GetMonAnByTen(string tenMon)
+        {
+            return monAnDAL.GetMonAnByTen(tenMon);
+        }
     }
 }

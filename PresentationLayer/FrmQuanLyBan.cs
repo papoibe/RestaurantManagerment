@@ -39,7 +39,8 @@ namespace PresentationLayer
                 {
                     if (ban.TrangThai == false) // nếu bàn đã có đơn hàng thì load số tiền của bàn lên và màu sẽ là đỏ
                     {
-                        name = ban.TenBan +"\n \n"+ banBL.GetTienBan(ban.MaBan);
+                        DonHang_DTO donHang = donHangBL.GetById(donHangBL.GetLastId(ban.MaBan));
+                        name = ban.TenBan +"\n \n"+ donHangBL.GetTongTien(donHang.MaDonHang);
                     }
                     else
                     {
@@ -50,8 +51,8 @@ namespace PresentationLayer
                         Text = name,
                         Width = 100,
                         Height = 100,
-                        BackColor = ban.TrangThai ? Color.Green : Color.Red, // Màu xanh nếu bàn trống, đỏ nếu đang sử dụng
-                        ForeColor = Color.White,
+                        BackColor = ban.TrangThai ? Color.LightGreen : Color.LightYellow, // Màu xanh nếu bàn trống, đỏ nếu đang sử dụng
+                        ForeColor = Color.Black,
                         Font = new Font("Arial", 12, FontStyle.Bold),
                         Tag = ban // Lưu thông tin bàn trong thuộc tính Tag
                     };
@@ -75,7 +76,8 @@ namespace PresentationLayer
             Ban_DTO ban = btnBan.Tag as Ban_DTO;
             if(ban!=null && ban.TrangThai == false) // bàn đã có đơn hàng
             {
-                FrmDonHang frmDonHang = new FrmDonHang(donHangBL.GetLastId(ban.MaBan), ban.MaBan);
+                DonHang_DTO donHang = donHangBL.GetById(donHangBL.GetLastId(ban.MaBan));
+                FrmDonHang frmDonHang = new FrmDonHang(donHang, ban);
                 DialogResult result = frmDonHang.ShowDialog();
                 if(result == DialogResult.OK)
                 {
