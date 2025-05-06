@@ -78,6 +78,7 @@ namespace PresentationLayer
             {
                 dgv_DonHang.Rows.Add(monAn.MaChiTiet, monAn.TenMonAn, monAn.SoLuong, monAn.DonGia, monAn.ThanhTien, monAn.GhiChu);
             }
+            //ThanhToan_DTO
         }
 
         // các hàm liên quan đến chức năng trong form

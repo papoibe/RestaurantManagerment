@@ -28,5 +28,9 @@ namespace BusinessLayer
         {
             return thanhToanDAL.InsertThanhToan(thanhToan);
         }
+        public List<HoaDonTT_DTO> GetHD()
+        {
+            return thanhToanDAL.GetHD();
+        }
     }
 }
