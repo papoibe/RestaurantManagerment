@@ -44,5 +44,9 @@ namespace BusinessLayer
             return banDAL.GetTienBan(maDonHang);
         }
 
+        public List<Ban_DTO> GetBanTrong()
+        {
+            return banDAL.GetBanTrong();
+        }
     }
 }

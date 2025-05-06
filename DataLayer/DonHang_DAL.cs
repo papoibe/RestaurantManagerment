@@ -40,6 +40,7 @@ namespace DataLayer
             dr.Close();
             return null;
         }
+
         public bool Insert(DonHang_DTO donHang)
         {
             string sql = "INSERT INTO DonHang (MaBan, MaNhanVien, NgayTao, MaTrangThai, GiamGia, TongTien, GhiChu) VALUES (@MaBan, @MaNV, @NgayTao, @MaTrangThai, @MaGiamGia, @TongTien, @GhiChu)";
@@ -120,7 +121,7 @@ namespace DataLayer
         }
         public float GetTongTien(int maDonHang)
         {
-            string sql = "SELECT TongTien FROM DonHang WHERE MaDonHang = @MaDonHang";
+            string sql = "SELECT SUM(ThanhTien) FROM ChiTietDonHang WHERE MaDonHang = @MaDonHang";
             try
             {
                 SqlCommand cmd = new SqlCommand(sql, cn);

@@ -3,10 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DataLayer;
+using TransferObject;
 
 namespace BusinessLayer
 {
-    class ThanhToan_BL
+    public class ThanhToan_BL
     {
+        private ThanhToan_DAL thanhToanDAL;
+        
+        public ThanhToan_BL()
+        {
+            thanhToanDAL = new ThanhToan_DAL();
+        }
+        public List<HinhThucTT_DTO> GetHinhThucTT()
+        {
+            return thanhToanDAL.GetHinhThucTT();
+        }
+        public List<ThanhToan_DTO> GetAll()
+        {
+            return thanhToanDAL.GetAll();
+        }
+        public bool Insert(ThanhToan_DTO thanhToan)
+        {
+            return thanhToanDAL.InsertThanhToan(thanhToan);
+        }
     }
 }

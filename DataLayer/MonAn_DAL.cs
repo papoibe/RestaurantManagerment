@@ -98,8 +98,9 @@ namespace DataLayer
         public List<MonAn_MaDH_DTO> GetMonByMaDH(int MaDH)
         {
             List<MonAn_MaDH_DTO> lst = new List<MonAn_MaDH_DTO>();
-            string sql = "select m.TenMonAn, ct.SoLuong, ct.DonGia, ct.ThanhTien from MonAn m, ChiTietDonHang ct where m.MaMonAn = ct.MaMonAn And ct.MaDonHang = @MaDH";
-            try { 
+            string sql = "select ct.MaChiTiet, m.TenMonAn, ct.SoLuong, ct.DonGia, ct.ThanhTien, ct.GhiChu from MonAn m, ChiTietDonHang ct where m.MaMonAn = ct.MaMonAn And ct.MaDonHang = @MaDH";
+            try
+            {
                 SqlCommand cmd = new SqlCommand(sql, cn);
                 cmd.Parameters.AddWithValue("@MaDH", MaDH);
                 Connect();
@@ -107,10 +108,12 @@ namespace DataLayer
                 while (dr.Read())
                 {
                     var monAn = new MonAn_MaDH_DTO(
-                        dr.GetString(0),                // TenMonAn
-                        dr.GetInt32(1),                 // SoLuong
-                        (float)dr.GetDouble(2),         // DonGia
-                        (float)dr.GetDouble(3)       // TrangThai
+                        dr.GetInt32(0),                 // MaChiTiet
+                        dr.GetString(1),                // TenMonAn
+                        dr.GetInt32(2),                 // SoLuong
+                        (float)dr.GetDouble(3),         // DonGia
+                        (float)dr.GetDouble(4),      // TrangThai
+                        dr.IsDBNull(5) ? string.Empty : dr.GetString(5) // GhiChu
                     );
                     lst.Add(monAn);
                 }
@@ -120,6 +123,40 @@ namespace DataLayer
             catch (SqlException ex)
             {
                 throw new Exception("Lỗi khi lấy món ăn theo mã đơn hàng: " + ex.Message);
+            }
+            finally
+            {
+                DisConnect();
+            }
+        }
+        public List<MonAn_DTO> GetMonAnByTen(string tenMonAn)
+        {
+            List<MonAn_DTO> lst = new List<MonAn_DTO>();
+            string sql = "SELECT * FROM MonAn WHERE TenMonAn LIKE @TenMonAn";
+            try
+            {
+                SqlCommand cmd = new SqlCommand(sql, cn);
+                cmd.Parameters.AddWithValue("@TenMonAn", "%" + tenMonAn + "%");
+                Connect();
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    MonAn_DTO monAn = new MonAn_DTO(
+                        dr.GetInt32(0),                 // MaMonAn
+                        dr.GetString(1),                // TenMonAn
+                        dr.GetInt32(2),                 // MaLoai
+                        (float)dr.GetDouble(3),         // DonGia
+                        dr.IsDBNull(4) ? string.Empty : dr.GetString(4), // MoTa
+                        dr.GetBoolean(6)                // TrangThai
+                    );
+                    lst.Add(monAn);
+                }
+                dr.Close();
+                return lst;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Lỗi khi tìm món ăn theo tên: " + ex.Message);
             }
             finally
             {

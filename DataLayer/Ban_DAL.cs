@@ -112,5 +112,19 @@ namespace DataLayer
 
 
         }
+        public List<Ban_DTO> GetBanTrong()
+        {
+            List<Ban_DTO> lst = new List<Ban_DTO>();
+            string sql = "SELECT * FROM Ban WHERE TrangThai = 1";
+            SqlDataReader dr = MyExecuteReader(sql, System.Data.CommandType.Text);
+            while (dr.Read())
+            {
+                Ban_DTO ban = new Ban_DTO(dr.GetInt32(0), dr.GetString(1), dr.GetInt32(2), dr.GetBoolean(3), dr.IsDBNull(4) ? string.Empty : dr.GetString(4));
+                lst.Add(ban);
+            }
+            dr.Close();
+            return lst;
+        }
+        
     }
 }
