@@ -68,17 +68,8 @@ namespace DataLayer
             {
                 Connect();
 
-                // Tìm ID nhỏ nhất chưa được sử dụng
-                string sqlNextId = @"
-                    SELECT ISNULL(MIN(t1.MaChiTiet + 1), 1)
-                    FROM ChiTietPhieuNhap t1
-                    WHERE NOT EXISTS (
-                        SELECT 1 FROM ChiTietPhieuNhap t2
-                        WHERE t2.MaChiTiet = t1.MaChiTiet + 1
-                    )";
-
-                SqlCommand cmdNextId = new SqlCommand(sqlNextId, cn);
-                int newId = Convert.ToInt32(cmdNextId.ExecuteScalar());
+                // Sử dụng kế thừa phương thức tiện ích để tìm ID trống nhỏ nhất DataProvider
+                int newId = Find_Id_Update("ChiTietPhieuNhap", "MaChiTiet");
 
                 // Tính thành tiền
                 float thanhTien = chiTiet.SoLuong * chiTiet.DonGia;
@@ -99,6 +90,7 @@ namespace DataLayer
                 cmd.Parameters.AddWithValue("@DonGia", chiTiet.DonGia);
                 cmd.Parameters.AddWithValue("@ThanhTien", thanhTien);
 
+    
                 // Xử lý chuỗi rỗng là NULL
                 if (string.IsNullOrWhiteSpace(chiTiet.GhiChu))
                     cmd.Parameters.AddWithValue("@GhiChu", DBNull.Value);

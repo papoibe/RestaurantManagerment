@@ -35,6 +35,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,11 +47,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FrmAdmin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmAdmin.Designer.cs">
+      <DependentUpon>FrmAdmin.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmBaoCao.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FrmBaoCao.Designer.cs">
       <DependentUpon>FrmBaoCao.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmChonKSCL\FrmChonMonAn.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmChonKSCL\FrmChonMonAn.Designer.cs">
+      <DependentUpon>FrmChonMonAn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmChonKSCL\FrmChonNguyenLieu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmChonKSCL\FrmChonNguyenLieu.Designer.cs">
+      <DependentUpon>FrmChonNguyenLieu.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmDangKy.cs">
       <SubType>Form</SubType>
@@ -69,6 +88,12 @@
     </Compile>
     <Compile Include="FrmKhuyenMai.Designer.cs">
       <DependentUpon>FrmKhuyenMai.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmKiemSoatChatLuong.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmKiemSoatChatLuong.Designer.cs">
+      <DependentUpon>FrmKiemSoatChatLuong.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmLapOrder.cs">
       <SubType>Form</SubType>
@@ -118,10 +143,46 @@
     <Compile Include="FrmThanhToan.Designer.cs">
       <DependentUpon>FrmThanhToan.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmThongTinDinhDuong.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmThongTinDinhDuong.Designer.cs">
+      <DependentUpon>FrmThongTinDinhDuong.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmWorkers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmWorkers.Designer.cs">
+      <DependentUpon>FrmWorkers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RestaurantManagement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RestaurantManagement.Designer.cs">
+      <DependentUpon>RestaurantManagement.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="FrmAdmin.resx">
+      <DependentUpon>FrmAdmin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmBaoCao.resx">
+      <DependentUpon>FrmBaoCao.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmChonKSCL\FrmChonMonAn.resx">
+      <DependentUpon>FrmChonMonAn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmChonKSCL\FrmChonNguyenLieu.resx">
+      <DependentUpon>FrmChonNguyenLieu.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmDangKy.resx">
       <DependentUpon>FrmDangKy.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmDonHang.resx">
+      <DependentUpon>FrmDonHang.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmKiemSoatChatLuong.resx">
+      <DependentUpon>FrmKiemSoatChatLuong.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmLapOrder.resx">
       <DependentUpon>FrmLapOrder.cs</DependentUpon>
@@ -129,8 +190,17 @@
     <EmbeddedResource Include="FrmLogin.resx">
       <DependentUpon>FrmLogin.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FrmPhanQuyen.resx">
+      <DependentUpon>FrmPhanQuyen.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmQuanLyBan.resx">
       <DependentUpon>FrmQuanLyBan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmQuanLyKho.resx">
+      <DependentUpon>FrmQuanLyKho.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmWorkers.resx">
+      <DependentUpon>FrmWorkers.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -140,7 +210,11 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="RestaurantManagement.resx">
+      <DependentUpon>RestaurantManagement.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -163,6 +237,109 @@
       <Project>{7bfe659e-3390-40db-9be3-9a4e690e3e7f}</Project>
       <Name>TransferObject</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\PicMain.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\PicMain1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\team.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\admin.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\report.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\schedule.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\account.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\login.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\login.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ticket.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\home-page.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="picture\momo.jpg" />
+    <Content Include="picture\monAn\1.png" />
+    <Content Include="picture\monAn\10.png" />
+    <Content Include="picture\monAn\11.png" />
+    <Content Include="picture\monAn\12.png" />
+    <Content Include="picture\monAn\13.png" />
+    <Content Include="picture\monAn\14.png" />
+    <Content Include="picture\monAn\15.png" />
+    <Content Include="picture\monAn\16.png" />
+    <Content Include="picture\monAn\17.png" />
+    <Content Include="picture\monAn\18.png" />
+    <Content Include="picture\monAn\19.png" />
+    <Content Include="picture\monAn\2.png" />
+    <Content Include="picture\monAn\20.png" />
+    <Content Include="picture\monAn\21.png" />
+    <Content Include="picture\monAn\22.png" />
+    <Content Include="picture\monAn\23.png" />
+    <Content Include="picture\monAn\24.png" />
+    <Content Include="picture\monAn\25.png" />
+    <Content Include="picture\monAn\26.png" />
+    <Content Include="picture\monAn\27.png" />
+    <Content Include="picture\monAn\28.png" />
+    <Content Include="picture\monAn\29.png" />
+    <Content Include="picture\monAn\3.png" />
+    <Content Include="picture\monAn\30.png" />
+    <Content Include="picture\monAn\31.png" />
+    <Content Include="picture\monAn\32.png" />
+    <Content Include="picture\monAn\33.png" />
+    <Content Include="picture\monAn\34.png" />
+    <Content Include="picture\monAn\35.png" />
+    <Content Include="picture\monAn\36.png" />
+    <Content Include="picture\monAn\37.png" />
+    <Content Include="picture\monAn\38.png" />
+    <Content Include="picture\monAn\39.png" />
+    <Content Include="picture\monAn\4.png" />
+    <Content Include="picture\monAn\40.png" />
+    <Content Include="picture\monAn\41.png" />
+    <Content Include="picture\monAn\42.png" />
+    <Content Include="picture\monAn\43.png" />
+    <Content Include="picture\monAn\44.png" />
+    <Content Include="picture\monAn\45.png" />
+    <Content Include="picture\monAn\46.png" />
+    <Content Include="picture\monAn\47.png" />
+    <Content Include="picture\monAn\48.png" />
+    <Content Include="picture\monAn\49.png" />
+    <Content Include="picture\monAn\5.png" />
+    <Content Include="picture\monAn\50.png" />
+    <Content Include="picture\monAn\51.png" />
+    <Content Include="picture\monAn\52.png" />
+    <Content Include="picture\monAn\53.png" />
+    <Content Include="picture\monAn\54.png" />
+    <Content Include="picture\monAn\55.png" />
+    <Content Include="picture\monAn\56.png" />
+    <Content Include="picture\monAn\57.png" />
+    <Content Include="picture\monAn\58.png" />
+    <Content Include="picture\monAn\59.png" />
+    <Content Include="picture\monAn\6.png" />
+    <Content Include="picture\monAn\60.png" />
+    <Content Include="picture\monAn\7.png" />
+    <Content Include="picture\monAn\8.png" />
+    <Content Include="picture\monAn\9.png" />
+    <Content Include="picture\nganhang.jpg" />
+    <Content Include="picture\picture_Ban.jpg" />
+    <Content Include="picture\picture_DongHo.jpg" />
+    <Content Include="picture\picture_HoaDon.jpg" />
+    <Content Include="picture\picture_lich.jpg" />
+    <Content Include="picture\picture_Lich.png" />
+    <None Include="Resources\button.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

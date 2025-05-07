@@ -11,26 +11,46 @@ using BusinessLayer;
 using TransferObject;
 using System.IO;
 using System.Data.SqlClient;
+using PresentationLayer.FrmChonKSCL;
+using System.Diagnostics;
 namespace PresentationLayer
 {
     public partial class FrmKiemSoatChatLuong : Form
     {
         private KiemTraChatLuong_BL kiemTraBL;
         private string maKiemTraCurrent = "";
-        private List<string> loaiKiemTraList = new List<string> { "NguyenLieu", "MonAn", "ThietBi" };
+        private List<string> loaiKiemTraList = new List<string> { "NguyenLieu", "MonAn"};
         private List<string> ketQuaList = new List<string> { "Đạt", "Không đạt", "Cần kiểm tra lại" };
         private string selectedImagePath = "";
         private bool isNewRecord = true;
         public FrmKiemSoatChatLuong()
         {
             InitializeComponent();
+            // Khởi tạo danh sách loại kiểm tra chỉ với hai loại: NguyenLieu và MonAn
+            loaiKiemTraList = new List<string> { "NguyenLieu", "MonAn" };
+            // Khởi tạo business layer để thao tác với dữ liệu
             kiemTraBL = new KiemTraChatLuong_BL();
+            // Khởi tạo danh sách kết quả
+            ketQuaList = new List<string> { "Đạt", "Không đạt", "Cần kiểm tra lại" };
         }
+
+        // khai báo class thống kê tab báo cáo và biến danh sách
+        private class ThongKeBaoCao
+        {
+            public string LoaiKiemTra { get; set; }
+            public int SoLuong { get; set; }
+            public int SoDat { get; set; }
+            public int SoKhongDat { get; set; }
+            public int SoCanKiemTraLai { get; set; }
+            public float TyLeDat { get; set; }
+        }
+
+        private List<ThongKeBaoCao> danhSachThongKe = new List<ThongKeBaoCao>();
 
         private void FrmKiemSoatChatLuong_Load(object sender, EventArgs e)
         {
             // Thiết lập người dùng hiện tại
-            lblCurrentUser.Text = "Người dùng: Nhân viên";
+            lblCurrentUser.Text = "Người dùng: (Mặc định @Admin)";
 
             // Khởi tạo combobox
             LoadComboBoxes();
@@ -54,6 +74,419 @@ namespace PresentationLayer
 
             // Tải thống kê
             LoadThongKe();
+
+            // Khoi tao tab bao cao 
+            LoadTabBaoCaoInitial();
+
+        }
+
+        private void LoadTabBaoCaoInitial()
+        {
+            //Thiet lap cac gia tri mac dinh
+            dtpBaoCaoFrom.Value = DateTime.Now.AddMonths(-1);
+            dtpBaoCaoTo.Value = DateTime.Now;
+            cboBaoCaoLoai.SelectedIndex = 0;
+            cboBaoCaoLoai.Items.Clear();
+            cboBaoCaoLoai.Items.Add("Tất cả");
+            cboBaoCaoLoai.Items.Add("Nguyên liệu");
+            cboBaoCaoLoai.Items.Add("Món ăn");
+            cboBaoCaoLoai.SelectedIndex = 0;
+            //tạo bảng
+            DataTable dtBaoCao = new DataTable();
+            dtBaoCao.Columns.Add("Loại Kiểm Tra", typeof(string));
+            dtBaoCao.Columns.Add("Số Lượng", typeof(int));
+            dtBaoCao.Columns.Add("Số Đạt", typeof(int));
+            dtBaoCao.Columns.Add("Số Không Đạt", typeof(int));
+            dtBaoCao.Columns.Add("Số Cần Kiểm Tra Lại", typeof(int));
+            dtBaoCao.Columns.Add("Tỷ Lệ Đạt (%)", typeof(float));
+
+
+            //gán nguồn dữ liệu cho DataGridCView
+            dgvBaoCao.DataSource = dtBaoCao;
+
+            // Định dạng hiển thị cho DataGridView
+            FormatBaoCaoDataGridView();
+
+
+            //load dữ liệu ban đầu 
+            LoadBaoCaoData();
+        }
+        private void FormatBaoCaoDataGridView()
+        {
+            foreach (DataGridViewColumn col in dgvBaoCao.Columns)
+            {
+                col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                col.HeaderCell.Style.Font = new Font(dgvBaoCao.Font, FontStyle.Bold);
+            }
+           
+        }
+
+        //Hiển thị dữ liệu lên Dgv
+        private void DisplayBaoCaoData()
+        {
+            DataTable dtBaoCao = new DataTable();
+
+            dtBaoCao.Columns.Add("LoaiKiemTra", typeof(string));
+            dtBaoCao.Columns.Add("SoLuong", typeof(int));
+            dtBaoCao.Columns.Add("SoDat", typeof(int));
+            dtBaoCao.Columns.Add("SoKhongDat", typeof(int));
+            dtBaoCao.Columns.Add("SoCanKiemTraLai", typeof(int));
+            dtBaoCao.Columns.Add("TyLeDat", typeof(float));
+
+            foreach (var item in danhSachThongKe)
+            {
+                DataRow row = dtBaoCao.NewRow();
+                row["LoaiKiemTra"] = item.LoaiKiemTra;
+                row["SoLuong"] = item.SoLuong;
+                row["SoDat"] = item.SoDat;
+                row["SoKhongDat"] = item.SoKhongDat;
+                row["SoCanKiemTraLai"] = item.SoCanKiemTraLai;
+                row["TyLeDat"] = item.TyLeDat;
+
+                dtBaoCao.Rows.Add(row);
+            }
+
+            // Xóa DataSource cũ và gán mới
+            dgvBaoCao.DataSource = null;
+            dgvBaoCao.DataSource = dtBaoCao;
+
+            // Đặt tiêu đề cột tiếng Việt
+            dgvBaoCao.Columns["LoaiKiemTra"].HeaderText = "Loại Kiểm Tra";
+            dgvBaoCao.Columns["SoLuong"].HeaderText = "Số Lượng";
+            dgvBaoCao.Columns["SoDat"].HeaderText = "Số Đạt";
+            dgvBaoCao.Columns["SoKhongDat"].HeaderText = "Số Không Đạt";
+            dgvBaoCao.Columns["SoCanKiemTraLai"].HeaderText = "Số Cần Kiểm Tra Lại";
+            dgvBaoCao.Columns["TyLeDat"].HeaderText = "Tỷ Lệ Đạt (%)";
+
+            // Định dạng cột tỷ lệ phần trăm
+            dgvBaoCao.Columns["TyLeDat"].DefaultCellStyle.Format = "0.00";
+
+            // Định dạng lại DataGridView 
+            foreach (DataGridViewRow row in dgvBaoCao.Rows)
+            {
+                if (row.Cells["LoaiKiemTra"].Value != null &&
+                    row.Cells["LoaiKiemTra"].Value.ToString() == "Tổng cộng")
+                {
+                    row.DefaultCellStyle.BackColor = Color.LightGray;
+                    row.DefaultCellStyle.Font = new Font(dgvBaoCao.Font, FontStyle.Bold);
+                }
+            }
+        }
+
+
+        private void DrawBaoCaoCharts()
+        {
+            // Xóa các control cũ trong panel
+            pnlPieChart.Controls.Clear();
+            pnlBarChart.Controls.Clear();
+
+            // Tạo biểu đồ tròn (pie chart)
+            DrawPieChart();
+
+            // Tạo biểu đồ cột (bar chart)
+            DrawBarChart();
+        }
+
+        private void DrawPieChart()
+        {
+            // Kiểm tra nếu không có dữ liệu
+            if (danhSachThongKe.Count == 0 || danhSachThongKe.Sum(tk => tk.SoLuong) == 0)
+            {
+                Label lblNoData = new Label
+                {
+                    Text = "Không có dữ liệu",
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    Dock = DockStyle.Fill,
+                    Font = new Font(Font.FontFamily, 12, FontStyle.Bold)
+                };
+                pnlPieChart.Controls.Add(lblNoData);
+                return;
+            }
+
+            // Lấy dữ liệu cho biểu đồ tròn theo kết quả kiểm tra
+            int tongSo = danhSachThongKe.Sum(tk => tk.SoLuong);
+            int soDat = danhSachThongKe.Sum(tk => tk.SoDat);
+            int soKhongDat = danhSachThongKe.Sum(tk => tk.SoKhongDat);
+            int soCanKiemTraLai = danhSachThongKe.Sum(tk => tk.SoCanKiemTraLai);
+
+            // Tính phần trăm
+            float ptDat = (float)soDat / tongSo * 100;
+            float ptKhongDat = (float)soKhongDat / tongSo * 100;
+            float ptCanKiemTraLai = (float)soCanKiemTraLai / tongSo * 100;
+
+            // Vẽ biểu đồ tròn đơn giản
+            PictureBox picPie = new PictureBox
+            {
+                Dock = DockStyle.Fill,
+                BackColor = Color.White
+            };
+
+            picPie.Paint += (sender, e) =>
+            {
+                Graphics g = e.Graphics;
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+                // Kích thước và vị trí của hình tròn
+                int size = Math.Min(picPie.Width, picPie.Height) - 40;
+                Rectangle rect = new Rectangle(
+                    (picPie.Width - size) / 2,
+                    (picPie.Height - size) / 2,
+                    size, size);
+
+                // Vẽ các phần của biểu đồ
+                float startAngle = 0;
+
+                // Phần "Đạt"
+                if (soDat > 0)
+                {
+                    float sweepAngle = ptDat * 360 / 100;
+                    g.FillPie(new SolidBrush(Color.Green), rect, startAngle, sweepAngle);
+                    startAngle += sweepAngle;
+                }
+
+                // Phần "Không đạt"
+                if (soKhongDat > 0)
+                {
+                    float sweepAngle = ptKhongDat * 360 / 100;
+                    g.FillPie(new SolidBrush(Color.Red), rect, startAngle, sweepAngle);
+                    startAngle += sweepAngle;
+                }
+
+                // Phần "Cần kiểm tra lại"
+                if (soCanKiemTraLai > 0)
+                {
+                    float sweepAngle = ptCanKiemTraLai * 360 / 100;
+                    g.FillPie(new SolidBrush(Color.Orange), rect, startAngle, sweepAngle);
+                }
+
+                // Vẽ chú thích
+                int legendY = rect.Bottom + 10;
+
+                // Chú thích "Đạt"
+                g.FillRectangle(new SolidBrush(Color.Green), 10, legendY, 20, 15);
+                g.DrawString($"Đạt: {soDat} ({ptDat:0.0}%)",
+                    new Font(Font.FontFamily, 8), Brushes.Black, 35, legendY);
+
+                // Chú thích "Không đạt"
+                legendY += 20;
+                g.FillRectangle(new SolidBrush(Color.Red), 10, legendY, 20, 15);
+                g.DrawString($"Không đạt: {soKhongDat} ({ptKhongDat:0.0}%)",
+                    new Font(Font.FontFamily, 8), Brushes.Black, 35, legendY);
+
+                // Chú thích "Cần kiểm tra lại"
+                legendY += 20;
+                g.FillRectangle(new SolidBrush(Color.Orange), 10, legendY, 20, 15);
+                g.DrawString($"Cần kiểm tra lại: {soCanKiemTraLai} ({ptCanKiemTraLai:0.0}%)",
+                    new Font(Font.FontFamily, 8), Brushes.Black, 35, legendY);
+            };
+
+            pnlPieChart.Controls.Add(picPie);
+        }
+
+        private void DrawBarChart()
+        {
+            // Kiểm tra nếu không có dữ liệu
+            if (danhSachThongKe.Count <= 1) // Loại bỏ dòng tổng cộng
+            {
+                Label lblNoData = new Label
+                {
+                    Text = "Không có dữ liệu",
+                    TextAlign = ContentAlignment.MiddleCenter,
+                    Dock = DockStyle.Fill,
+                    Font = new Font(Font.FontFamily, 12, FontStyle.Bold)
+                };
+                pnlBarChart.Controls.Add(lblNoData);
+                return;
+            }
+
+            // Lấy dữ liệu cho biểu đồ cột (loại bỏ dòng tổng cộng)
+            var dataForChart = danhSachThongKe.Where(tk => tk.LoaiKiemTra != "Tổng cộng").ToList();
+
+            // Vẽ biểu đồ cột đơn giản
+            PictureBox picBar = new PictureBox
+            {
+                Dock = DockStyle.Fill,
+                BackColor = Color.White
+            };
+
+            picBar.Paint += (sender, e) =>
+            {
+                Graphics g = e.Graphics;
+                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+                // Kích thước và vị trí của biểu đồ
+                int margin = 40;
+                int left = margin;
+                int top = margin;
+                int width = picBar.Width - 2 * margin;
+                int height = picBar.Height - 2 * margin;
+
+                // Vẽ trục x và trục y
+                g.DrawLine(Pens.Black, left, top + height, left + width, top + height); // Trục x
+                g.DrawLine(Pens.Black, left, top, left, top + height); // Trục y
+
+                // Xác định giá trị max để tỷ lệ
+                int maxValue = dataForChart.Max(tk => tk.SoLuong);
+                if (maxValue == 0) maxValue = 1; // Tránh chia cho 0
+
+                // Khoảng cách giữa các cột
+                int barWidth = width / (dataForChart.Count * 4);
+                int barSpace = barWidth / 2;
+
+                // Vẽ các cột
+                for (int i = 0; i < dataForChart.Count; i++)
+                {
+                    var data = dataForChart[i];
+
+                    int x = left + barSpace + i * (barWidth * 4 + barSpace);
+
+                    // Cột tổng số
+                    int barHeight = (int)(height * data.SoLuong / maxValue);
+                    g.FillRectangle(new SolidBrush(Color.Blue), x, top + height - barHeight, barWidth, barHeight);
+                    g.DrawString(data.SoLuong.ToString(), new Font(Font.FontFamily, 8), Brushes.Black,
+                        x, top + height - barHeight - 15);
+
+                    // Cột số đạt
+                    x += barWidth + barSpace;
+                    barHeight = (int)(height * data.SoDat / maxValue);
+                    g.FillRectangle(new SolidBrush(Color.Green), x, top + height - barHeight, barWidth, barHeight);
+                    g.DrawString(data.SoDat.ToString(), new Font(Font.FontFamily, 8), Brushes.Black,
+                        x, top + height - barHeight - 15);
+
+                    // Cột số không đạt
+                    x += barWidth + barSpace;
+                    barHeight = (int)(height * data.SoKhongDat / maxValue);
+                    g.FillRectangle(new SolidBrush(Color.Red), x, top + height - barHeight, barWidth, barHeight);
+                    g.DrawString(data.SoKhongDat.ToString(), new Font(Font.FontFamily, 8), Brushes.Black,
+                        x, top + height - barHeight - 15);
+
+                    // Cột số cần kiểm tra lại
+                    x += barWidth + barSpace;
+                    barHeight = (int)(height * data.SoCanKiemTraLai / maxValue);
+                    g.FillRectangle(new SolidBrush(Color.Orange), x, top + height - barHeight, barWidth, barHeight);
+                    g.DrawString(data.SoCanKiemTraLai.ToString(), new Font(Font.FontFamily, 8), Brushes.Black,
+                        x, top + height - barHeight - 15);
+
+                    // Nhãn trục x
+                    g.DrawString(data.LoaiKiemTra, new Font(Font.FontFamily, 8), Brushes.Black,
+                        left + barSpace + i * (barWidth * 4 + barSpace) + barWidth, top + height + 5);
+                }
+
+                // Chú thích
+                int legendY = 10;
+
+                // Chú thích "Tổng số"
+                g.FillRectangle(new SolidBrush(Color.Blue), width - 120, legendY, 15, 10);
+                g.DrawString("Tổng số", new Font(Font.FontFamily, 8), Brushes.Black, width - 100, legendY);
+
+                // Chú thích "Đạt"
+                legendY += 15;
+                g.FillRectangle(new SolidBrush(Color.Green), width - 120, legendY, 15, 10);
+                g.DrawString("Đạt", new Font(Font.FontFamily, 8), Brushes.Black, width - 100, legendY);
+
+                // Chú thích "Không đạt"
+                legendY += 15;
+                g.FillRectangle(new SolidBrush(Color.Red), width - 120, legendY, 15, 10);
+                g.DrawString("Không đạt", new Font(Font.FontFamily, 8), Brushes.Black, width - 100, legendY);
+
+                // Chú thích "Cần kiểm tra lại"
+                legendY += 15;
+                g.FillRectangle(new SolidBrush(Color.Orange), width - 120, legendY, 15, 10);
+                g.DrawString("Cần KT lại", new Font(Font.FontFamily, 8), Brushes.Black, width - 100, legendY);
+            };
+
+            pnlBarChart.Controls.Add(picBar);
+        }
+
+        //tính và hiển thị tab bao cao
+        private void LoadBaoCaoData()
+        {
+            try
+            {
+                lblStatus.Text = "Đang tải dữ liệu báo cáo...";
+                progressBar.Visible = true;
+
+                // Lấy thông tin từ các điều khiển
+                DateTime tuNgay = dtpBaoCaoFrom.Value.Date;
+                DateTime denNgay = dtpBaoCaoTo.Value.Date.AddDays(1).AddSeconds(-1); // Đến cuối ngày
+                string loaiFilter = cboBaoCaoLoai.SelectedItem.ToString();
+
+                // Lấy danh sách kiểm tra từ Business Layer
+                List<KiemTraChatLuong_DTO> dsKiemTra = kiemTraBL.GetKiemTraChatLuongList();
+
+                // Lọc theo khoảng thời gian //note
+                var dsKiemTraLoc = dsKiemTra.Where(kt => kt.NgayKiemTra >= tuNgay && kt.NgayKiemTra <= denNgay);
+                if (loaiFilter != "Tất cả")
+                {
+                    string loaiKiemTra = loaiFilter == "Nguyên liệu" ? "NguyenLieu" : "MonAn";
+                    dsKiemTraLoc = dsKiemTraLoc.Where(kt => kt.LoaiKiemTra == loaiKiemTra);
+                }
+                //Làm mới danh sách thống ke
+                danhSachThongKe.Clear();
+
+                // tính toán thống kê theo loại 
+                var thongKe = dsKiemTraLoc
+                    .GroupBy(kt => kt.LoaiKiemTra)
+                    .Select(g => new
+                    {
+                        LoaiKiemTra = g.Key == "NguyenLieu" ? "Nguyên liệu" : "Món ăn",
+                        SoLuong = g.Count(),
+                        SoDat = g.Count(kt => kt.KetQua == "Đạt"),
+                        SoKhongDat = g.Count(kt => kt.KetQua == "Không đạt"),
+                        SoCanKiemTraLai = g.Count(kt => kt.KetQua == "Cần kiểm tra lại")
+                    })
+                    .ToList();
+
+                //tạo đối tượng ThongKeBaoCao tu kết quả thống kê
+                foreach (var item in thongKe)
+                {
+                    ThongKeBaoCao baoCaoItem = new ThongKeBaoCao
+                    {
+                        LoaiKiemTra = item.LoaiKiemTra,
+                        SoLuong = item.SoLuong,
+                        SoDat = item.SoDat,
+                        SoKhongDat = item.SoKhongDat,
+                        SoCanKiemTraLai = item.SoCanKiemTraLai,
+                        TyLeDat = item.SoLuong > 0 ? (float)item.SoDat * 100 / item.SoLuong : 0
+                    };
+
+                    danhSachThongKe.Add(baoCaoItem);
+                }
+
+                // tổng cộng
+                if (danhSachThongKe.Count > 0)
+                {
+                    ThongKeBaoCao tongCong = new ThongKeBaoCao
+                    {
+                        LoaiKiemTra = "Tổng cộng",
+                        SoLuong = danhSachThongKe.Sum(tk => tk.SoLuong),
+                        SoDat = danhSachThongKe.Sum(tk => tk.SoDat),
+                        SoKhongDat = danhSachThongKe.Sum(tk => tk.SoKhongDat),
+                        SoCanKiemTraLai = danhSachThongKe.Sum(tk => tk.SoCanKiemTraLai),
+                    };
+                    tongCong.TyLeDat = tongCong.SoLuong > 0 ? (float)tongCong.SoDat * 100 / tongCong.SoLuong : 0;
+                    danhSachThongKe.Add(tongCong);
+                }
+
+                //hiển thị dữ liệu lên Dgv
+                DisplayBaoCaoData();
+
+                //vẽ biểu đồ (Chương Đồ Họa lập trình giao diện) 
+                DrawBaoCaoCharts();
+                progressBar.Visible = false;
+                lblStatus.Text = "Đã tải xong báo cáo thống kê";
+
+            }
+            catch (Exception ex)
+            {
+
+                progressBar.Visible = false;
+                lblStatus.Text = "Lỗi khi tải báo cáo: " + ex.Message;
+                MessageBox.Show("Lỗi khi tải dữ liệu báo cáo: " + ex.Message, "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         // Tải dữ liệu thống kê
@@ -69,7 +502,6 @@ namespace PresentationLayer
                 // Đếm số lượng cảnh báo
                 int soNguyenLieuCanhBao = 0;
                 int soMonAnCanhBao = 0;
-                int soThietBiCanhBao = 0;
 
                 // Lấy danh sách kiểm tra
                 List<KiemTraChatLuong_DTO> danhSachKiemTra = kiemTraBL.GetKiemTraChatLuongList();
@@ -88,8 +520,6 @@ namespace PresentationLayer
                             soNguyenLieuCanhBao++;
                         else if (item.LoaiKiemTra == "MonAn")
                             soMonAnCanhBao++;
-                        else if (item.LoaiKiemTra == "ThietBi")
-                            soThietBiCanhBao++;
                     }
                     else if (item.KetQua == "Cần kiểm tra lại")
                         soCanKiemTraLai++;
@@ -102,7 +532,8 @@ namespace PresentationLayer
 
                 lblSoNguyenLieuCanhBao.Text = soNguyenLieuCanhBao.ToString();
                 lblSoMonAnCanhBao.Text = soMonAnCanhBao.ToString();
-                lblSoThietBiCanhBao.Text = soThietBiCanhBao.ToString();
+
+
             }
             catch (Exception ex)
             {
@@ -136,91 +567,39 @@ namespace PresentationLayer
                 lblStatus.Text = "Đang tải dữ liệu...";
                 progressBar.Visible = true;
 
+                // luu tru lua chon hien tai 
+                string selectedMaKiemTra = null;
+                if (dgvKiemTra.CurrentRow != null && dgvKiemTra.CurrentRow.Cells["MaKiemTra"] != null)
+                {
+                    selectedMaKiemTra = dgvKiemTra.CurrentRow.Cells["MaKiemTra"].Value.ToString();
+                }
+
+
                 // Lấy danh sách kiểm tra từ Business Layer
                 List<KiemTraChatLuong_DTO> dsKiemTra = kiemTraBL.GetKiemTraChatLuongList();
 
                 // Gán DataSource cho DataGridView
                 dgvKiemTra.DataSource = null;
+
+                // neu danh sach rong, khong thuc hien gi 
+                if (dsKiemTra == null || dsKiemTra.Count == 0)
+                {
+                    progressBar.Visible = false;
+                    lblStatus.Text = "Không có dữ liệu kiểm tra nào.";
+                    return;
+                }
+
+                // gan data mới
                 dgvKiemTra.DataSource = dsKiemTra;
 
-                // Định dạng các cột sau khi đã gán DataSource
-                if (dgvKiemTra.Columns.Contains("MaKiemTra"))
+                // dinh dang cac cot sau khi da gan DataSource
+                FormatDataGridView();
+
+                // Chọn lại dòng đã chọn trước đó   
+                if (!string.IsNullOrEmpty(selectedMaKiemTra))
                 {
-                    dgvKiemTra.Columns["MaKiemTra"].HeaderText = "Mã KT";
-                    dgvKiemTra.Columns["MaKiemTra"].Width = 80;
+                    SelectRowByMaKiemTra(selectedMaKiemTra);
                 }
-
-                if (dgvKiemTra.Columns.Contains("LoaiKiemTra"))
-                {
-                    dgvKiemTra.Columns["LoaiKiemTra"].HeaderText = "Loại KT";
-                    dgvKiemTra.Columns["LoaiKiemTra"].Width = 100;
-                }
-
-                if (dgvKiemTra.Columns.Contains("DoiTuongKiemTra"))
-                {
-                    dgvKiemTra.Columns["DoiTuongKiemTra"].HeaderText = "Đối tượng";
-                    dgvKiemTra.Columns["DoiTuongKiemTra"].Width = 120;
-                }
-
-                if (dgvKiemTra.Columns.Contains("NgayKiemTra"))
-                {
-                    dgvKiemTra.Columns["NgayKiemTra"].HeaderText = "Ngày KT";
-                    dgvKiemTra.Columns["NgayKiemTra"].DefaultCellStyle.Format = "dd/MM/yyyy HH:mm";
-                    dgvKiemTra.Columns["NgayKiemTra"].Width = 150;
-                }
-
-                if (dgvKiemTra.Columns.Contains("NguoiKiemTra"))
-                    dgvKiemTra.Columns["NguoiKiemTra"].Visible = false;
-
-                if (dgvKiemTra.Columns.Contains("TenNguoiKiemTra"))
-                {
-                    dgvKiemTra.Columns["TenNguoiKiemTra"].HeaderText = "Người KT";
-                    dgvKiemTra.Columns["TenNguoiKiemTra"].Width = 150;
-                }
-
-                if (dgvKiemTra.Columns.Contains("TieuChiKiemTra"))
-                {
-                    dgvKiemTra.Columns["TieuChiKiemTra"].HeaderText = "Tiêu chí";
-                    dgvKiemTra.Columns["TieuChiKiemTra"].Width = 150;
-                }
-
-                if (dgvKiemTra.Columns.Contains("GiaTri"))
-                {
-                    dgvKiemTra.Columns["GiaTri"].HeaderText = "Giá trị";
-                    dgvKiemTra.Columns["GiaTri"].Width = 80;
-                }
-
-                if (dgvKiemTra.Columns.Contains("DonVi"))
-                {
-                    dgvKiemTra.Columns["DonVi"].HeaderText = "Đơn vị";
-                    dgvKiemTra.Columns["DonVi"].Width = 80;
-                }
-
-                if (dgvKiemTra.Columns.Contains("KetQua"))
-                {
-                    dgvKiemTra.Columns["KetQua"].HeaderText = "Kết quả";
-                    dgvKiemTra.Columns["KetQua"].Width = 100;
-
-                    // Định dạng màu dựa trên kết quả
-                    dgvKiemTra.Columns["KetQua"].DefaultCellStyle.Format = "N2";
-                    dgvKiemTra.CellFormatting += dgvKiemTra_CellFormatting;
-                }
-
-                if (dgvKiemTra.Columns.Contains("GhiChu"))
-                {
-                    dgvKiemTra.Columns["GhiChu"].HeaderText = "Ghi chú";
-                    dgvKiemTra.Columns["GhiChu"].Width = 200;
-                }
-
-                if (dgvKiemTra.Columns.Contains("HinhAnh"))
-                    dgvKiemTra.Columns["HinhAnh"].Visible = false;
-
-                // Thiết lập định dạng chung cho DataGridView
-                dgvKiemTra.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-                dgvKiemTra.AllowUserToAddRows = false;
-                dgvKiemTra.AllowUserToDeleteRows = false;
-                dgvKiemTra.ReadOnly = true;
-                dgvKiemTra.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
                 progressBar.Visible = false;
                 lblStatus.Text = "Đã tải " + dsKiemTra.Count + " bản ghi";
@@ -239,9 +618,42 @@ namespace PresentationLayer
             }
         }
 
+        // phuong thuc dinh dang cac cot sau khi da gan datasoucre
+        private void FormatDataGridView()
+        {
+            // Đặt tên cột
+            dgvKiemTra.Columns["MaKiemTra"].HeaderText = "Mã Kiểm Tra";
+            dgvKiemTra.Columns["LoaiKiemTra"].HeaderText = "Loại Kiểm Tra";
+            dgvKiemTra.Columns["DoiTuongKiemTra"].HeaderText = "Đối Tượng Kiểm Tra";
+            dgvKiemTra.Columns["NgayKiemTra"].HeaderText = "Ngày Kiểm Tra";
+            dgvKiemTra.Columns["NguoiKiemTra"].HeaderText = "Người Kiểm Tra";
+            dgvKiemTra.Columns["TieuChiKiemTra"].HeaderText = "Tiêu Chí Kiểm Tra";
+            dgvKiemTra.Columns["GiaTri"].HeaderText = "Giá Trị";
+            dgvKiemTra.Columns["DonVi"].HeaderText = "Đơn Vị";
+            dgvKiemTra.Columns["KetQua"].HeaderText = "Kết Quả";
+            dgvKiemTra.Columns["GhiChu"].HeaderText = "Ghi Chú";
+            // Ẩn cột không cần thiết
+            dgvKiemTra.Columns["HinhAnh"].Visible = false;
+            // Đặt chiều rộng cột
+            foreach (DataGridViewColumn col in dgvKiemTra.Columns)
+            {
+                col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                col.HeaderCell.Style.Font = new Font(dgvKiemTra.Font, FontStyle.Bold);
+                col.HeaderCell.Style.BackColor = Color.LightGray;
+                col.HeaderCell.Style.ForeColor = Color.Black;
+                col.HeaderCell.Style.SelectionBackColor = Color.Gray;
+                col.HeaderCell.Style.SelectionForeColor = Color.White;
+            }
+        }
+
         // dinh dang mau cho KetQua
         private void dgvKiemTra_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
+            if (e == null || dgvKiemTra == null || dgvKiemTra.Columns == null || e.ColumnIndex < 0 || e.ColumnIndex >= dgvKiemTra.Columns.Count)
+                return;
+
             if (dgvKiemTra.Columns[e.ColumnIndex].Name == "KetQua" && e.Value != null)
             {
                 string ketQua = e.Value.ToString();
@@ -322,10 +734,76 @@ namespace PresentationLayer
             }
         }
 
+        //Xu ly viec them phieu kiem tra
+        private void ThemPhieuKiemTra(KiemTraChatLuong_DTO kiemTra)
+        {
+            try
+            {
+                // Thêm phiếu kiểm tra vào CSDL
+                bool result = kiemTraBL.AddKiemTraChatLuong(kiemTra);
+                if (result)
+                {
+                    MessageBox.Show("Thêm phiếu kiểm tra thành công.", "Thông báo",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    //Enable 
+                    EnableEditControls(true); 
+                    // Tải lại danh sách kiểm tra
+                    LoadDanhSachKiemTra();
+
+                    // Hiển thị thông tin phiếu vừa tạo
+                    KiemTraChatLuong_DTO kiemTraMoi = kiemTraBL.GetKiemTraById(kiemTra.MaKiemTra);
+                    if (kiemTraMoi != null)
+                    {
+                        maKiemTraCurrent = kiemTraMoi.MaKiemTra;
+                        txtMaKiemTra.Text = kiemTraMoi.MaKiemTra;
+                        SelectRowByMaKiemTra(kiemTraMoi.MaKiemTra);
+                    }
+
+                    // cap nhat trang thai
+                    lblStatus.Text = "Đã thêm phiếu kiểm tra mới." + kiemTra.MaKiemTra;
+
+                    // CAP NHAT THONG KE
+                    LoadThongKe();
+                    // Đánh dấu là không phải bản ghi mới nữa 
+                    isNewRecord = false;
+
+
+
+                }
+                else
+                {
+                    MessageBox.Show("Không thể thêm phiếu kiểm tra.", "Lỗi",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (SqlException ex)
+            {
+                lblStatus.Text = "Lỗi SQL: " + ex.Message;
+                MessageBox.Show("Lỗi khi thêm phiếu kiểm tra: " + ex.Message, "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (Exception ex)
+            {
+                lblStatus.Text = "Lỗi: " + ex.Message;
+                MessageBox.Show("Lỗi không xác định: " + ex.Message, "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+
+
+
         private void btnThemKiemTra_Click(object sender, EventArgs e)
         {
             try
             {
+                EnableEditControls(true);
+                // Hiển thị thông báo đang xử lý
+                lblStatus.Text = "Đang tạo phiếu kiểm tra...";
+                progressBar.Visible = true;
+
                 // Lấy và kiểm tra mã nhân viên từ textbox
                 int maNhanVien;
                 if (!int.TryParse(txtMaNhanVien.Text.Trim(), out maNhanVien) || maNhanVien <= 0)
@@ -333,6 +811,8 @@ namespace PresentationLayer
                     MessageBox.Show("Mã nhân viên phải là số nguyên dương.", "Cảnh báo",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     txtMaNhanVien.Focus();
+                    progressBar.Visible = false;
+                    lblStatus.Text = "Sẵn sàng";
                     return;
                 }
 
@@ -342,12 +822,46 @@ namespace PresentationLayer
                     MessageBox.Show("Mã nhân viên không tồn tại trong hệ thống.", "Cảnh báo",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     txtMaNhanVien.Focus();
+                    progressBar.Visible = false;
+                    lblStatus.Text = "Sẵn sàng";
+                    return;
+                }
+
+                // Kiểm tra đã chọn loại kiểm tra chưa
+                if (cboLoaiKiemTra.SelectedItem == null)
+                {
+                    MessageBox.Show("Vui lòng chọn loại kiểm tra.", "Cảnh báo",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    cboLoaiKiemTra.Focus();
+                    progressBar.Visible = false;
+                    lblStatus.Text = "Sẵn sàng";
+                    return;
+                }
+
+                // Kiểm tra đã chọn kết quả chưa
+                if (cboKetQua.SelectedItem == null)
+                {
+                    MessageBox.Show("Vui lòng chọn kết quả kiểm tra.", "Cảnh báo",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    cboKetQua.Focus();
+                    progressBar.Visible = false;
+                    lblStatus.Text = "Sẵn sàng";
+                    return;
+                }
+
+                // Kiểm tra đã nhập đối tượng kiểm tra chưa
+                if (string.IsNullOrWhiteSpace(txtDoiTuong.Text))
+                {
+                    MessageBox.Show("Vui lòng chọn đối tượng kiểm tra.", "Cảnh báo",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    btnChonDoiTuong.Focus();
+                    progressBar.Visible = false;
+                    lblStatus.Text = "Sẵn sàng";
                     return;
                 }
 
                 // Tạo đối tượng kiểm tra mới
                 KiemTraChatLuong_DTO kiemTra = new KiemTraChatLuong_DTO();
-                kiemTra.MaKiemTra = ""; // Sẽ được tạo tự động trong BL
                 kiemTra.LoaiKiemTra = cboLoaiKiemTra.SelectedItem.ToString();
                 kiemTra.DoiTuongKiemTra = txtDoiTuong.Text.Trim();
 
@@ -380,55 +894,8 @@ namespace PresentationLayer
                     kiemTra.HinhAnh = null;
                 }
 
-                lblStatus.Text = "Đang tạo phiếu kiểm tra...";
-                progressBar.Visible = true;
-
-                // Thêm phiếu kiểm tra và lấy kết quả
-                bool result = kiemTraBL.AddKiemTraChatLuong(kiemTra);
-                if (result)
-                {
-                    MessageBox.Show("Tạo phiếu kiểm tra thành công.", "Thông báo",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    // Enable các control
-                    EnableEditControls(true);
-
-                    // Load lại danh sách kiểm tra
-                    LoadDanhSachKiemTra();
-
-                    // Hiển thị thông tin phiếu vừa tạo
-                    KiemTraChatLuong_DTO kiemTraMoi = kiemTraBL.GetKiemTraById(kiemTra.MaKiemTra);
-                    if (kiemTraMoi != null)
-                    {
-                        maKiemTraCurrent = kiemTraMoi.MaKiemTra;
-                        txtMaKiemTra.Text = kiemTraMoi.MaKiemTra;
-                        SelectRowByMaKiemTra(kiemTraMoi.MaKiemTra);
-                    }
-
-                    // Cập nhật trạng thái
-                    lblStatus.Text = "Đã tạo phiếu kiểm tra thành công";
-
-                    // Cập nhật thống kê
-                    LoadThongKe();
-
-                    // Đánh dấu là không phải bản ghi mới nữa
-                    isNewRecord = false;
-                }
-                else
-                {
-                    MessageBox.Show("Không thể tạo phiếu kiểm tra. Vui lòng thử lại.", "Lỗi",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    lblStatus.Text = "Lỗi: Không thể tạo phiếu kiểm tra";
-                }
-
-                progressBar.Visible = false;
-            }
-            catch (SqlException ex)
-            {
-                progressBar.Visible = false;
-                lblStatus.Text = "Lỗi SQL: " + ex.Message;
-                MessageBox.Show("Lỗi SQL khi tạo phiếu kiểm tra: " + ex.Message, "Lỗi",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // Sử dụng một method riêng để thêm phiếu kiểm tra để dễ xử lý lỗi
+                ThemPhieuKiemTra(kiemTra);
             }
             catch (Exception ex)
             {
@@ -700,7 +1167,7 @@ namespace PresentationLayer
         {
             // Reset form
             ResetForm();
-            EnableEditControls(false);
+            EnableEditControls(true);
         }
 
         private void dgvKiemTra_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -778,7 +1245,81 @@ namespace PresentationLayer
 
         private void btnChonDoiTuong_Click(object sender, EventArgs e)
         {
+            try
+            {
+                // kiem tra loai kiem tra da duoc chon chua
+                if (cboLoaiKiemTra.SelectedItem == null)
+                {
+                    MessageBox.Show("Vui lòng chọn loại kiểm tra trước.", "Cảnh báo",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    cboLoaiKiemTra.Focus();
+                    return;
+                }
 
+                string loaiKiemTra = cboLoaiKiemTra.SelectedItem.ToString();
+
+                // xu ly tuy theo loai kiem tra
+                switch (loaiKiemTra)
+                {
+                    case "NguyenLieu":
+                        // Mở form chọn nguyên liệu
+                         FrmChonKSCL.FrmChonNguyenLieu frmNguyenLieu = new FrmChonKSCL.FrmChonNguyenLieu();
+
+                        frmNguyenLieu.Dock = DockStyle.Fill;
+                        frmNguyenLieu.FormBorderStyle = FormBorderStyle.None;
+                        if (frmNguyenLieu.ShowDialog() == DialogResult.OK)
+                        {
+                            // Lấy giá trị từ form chọn nguyên liệu
+                            int maNguyenLieu = frmNguyenLieu.MaNguyenLieuDaChon;
+                            string tenNguyenLieu = frmNguyenLieu.TenNguyenLieuDaChon;
+                            string donVi = frmNguyenLieu.DonViTinhDaChon;
+
+                            // Gán giá trị vào textbox
+                            txtDoiTuong.Text = maNguyenLieu.ToString();
+                            // hiển thị thông tin nguyên liệu đã chọn trong ghi chú 
+                            txtGhiChu.Text = $"Kiểm tra nguyên liệu: {tenNguyenLieu} ({donVi})";
+
+                            //Tieu chí kiểm tra
+                            txtTieuChi.Text = "Kiểm tra chất lượng nguyên liệu: " + tenNguyenLieu;
+                            //hiển thị thông tin nguyên liệu đã chọn trong tiêu chí
+                            MessageBox.Show($"Tiêu chí kiểm tra: Kiểm tra chất lượng nguyên liệu: {tenNguyenLieu}", "Thông báo",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        break;
+
+
+                    case "MonAn":
+                        FrmChonKSCL.FrmChonMonAn frmMonAn = new FrmChonKSCL.FrmChonMonAn();
+                        if (frmMonAn.ShowDialog() == DialogResult.OK)
+                        {
+                            // lay mon an duoc chon
+                            int maMonAn = frmMonAn.MaMonAnDaChon;
+                            string tenMonAn = frmMonAn.TenMonAnDaChon;
+                            float donVi = frmMonAn.DonGiaDaChon;
+                            //gan ma mon an vao textbox
+                            txtDoiTuong.Text = maMonAn.ToString();
+
+                            // hien thi thong tin mon an da chon trong ghi chu
+                            txtGhiChu.Text = $"Kiểm tra món ăn: {tenMonAn} ({donVi})";
+                            // Tieu chí kiểm tra
+                            txtTieuChi.Text = "Hương vị";
+
+                            // hien thi thong tin mon an da chon trong tieu chi
+                            MessageBox.Show($"Tiêu chí kiểm tra: Hương vị món ăn: {tenMonAn}", "Thông báo",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        break;
+                    default:
+                        MessageBox.Show("Loại kiểm tra không hợp lệ.", "Cảnh báo",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        break;
+                } 
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi chọn đối tượng kiểm tra: " + ex.Message, "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnChonAnh_Click(object sender, EventArgs e)
@@ -848,6 +1389,16 @@ namespace PresentationLayer
         private void btnXuatBaoCao_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void pnlBaoCao_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void btnBaoCaoLoc_Click(object sender, EventArgs e)
+        {
+            LoadBaoCaoData();
         }
     }
 }

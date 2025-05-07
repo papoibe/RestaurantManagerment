@@ -14,7 +14,6 @@ namespace TransferObject
         public float SoTien { get; set; }
         public DateTime NgayThanhToan { get; set; }
         public string GhiChu { get; set; }
-        
         public ThanhToan_DTO() { }
         public ThanhToan_DTO( int maDonHang, int maNhanVien, int maHinhThucTT, float soTien, DateTime ngayThanhToan, string ghiChu)
         {

@@ -43,17 +43,24 @@
   <ItemGroup>
     <Compile Include="Account_BL.cs" />
     <Compile Include="Ban_BL.cs" />
-    <Compile Include="BaoCao_BL.cs" />
+    <Compile Include="BaoCaoDoanhThu_BL.cs" />
+    <Compile Include="BaoCaoMonAn_BL.cs" />
     <Compile Include="Bep_ BL.cs" />
+    <Compile Include="ChiTietDonHang_BL.cs" />
+    <Compile Include="ChiTietPhieuNhap_BL.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="DonHang_BL.cs" />
     <Compile Include="KhachHang_BL.cs" />
     <Compile Include="Kho_BL.cs" />
     <Compile Include="KhuyenMai_BL.cs" />
-    <Compile Include="MonAn_Module_BL.cs" />
+    <Compile Include="KiemTraChatLuong_BL.cs" />
+    <Compile Include="MonAn_BL.cs" />
+    <Compile Include="NguyenVatLieu_BL.cs" />
     <Compile Include="NhanVien_BL.cs" />
+    <Compile Include="PhieuNhapKho_BL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ThanhToan_BL.cs" />
+    <Compile Include="ThongTinDinhDuong_BL.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataLayer\DataLayer.csproj">

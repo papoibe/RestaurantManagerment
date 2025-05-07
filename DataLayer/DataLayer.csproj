@@ -41,14 +41,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BanDAL.cs" />
     <Compile Include="Ban_DAL.cs" />
     <Compile Include="Account_DAL.cs" />
+    <Compile Include="BaoCaoDoanhThu_DAL.cs" />
+    <Compile Include="BaoCaoMonAn_DAL.cs" />
     <Compile Include="BepDAL.cs" />
+    <Compile Include="ChiTietDonHang_DAL.cs" />
+    <Compile Include="ChiTietPhieuNhap_DAL.cs" />
     <Compile Include="Class1.cs" />
     <Compile Include="DataProvider.cs" />
+    <Compile Include="DonHang_DAL.cs" />
     <Compile Include="Kho_DAL.cs" />
+    <Compile Include="KhuyenMai_DAL.cs" />
+    <Compile Include="KiemTraChatLuong_DAL.cs" />
+    <Compile Include="LoaiMonAn_DAL.cs" />
+    <Compile Include="MonAn_DAL.cs" />
+    <Compile Include="NguyenVatLieu_DAL.cs" />
+    <Compile Include="NhanVien_DAL.cs" />
+    <Compile Include="PhieuNhapKho_DAL.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ThanhToan_DAL.cs" />
+    <Compile Include="ThongTinDinhDuong_DAL.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TransferObject\TransferObject.csproj">

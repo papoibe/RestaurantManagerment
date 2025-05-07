@@ -33,6 +33,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,8 +45,24 @@
   <ItemGroup>
     <Compile Include="Account_DTO.cs" />
     <Compile Include="Ban_DTO.cs" />
+    <Compile Include="BaoCao_DTO.cs" />
+    <Compile Include="Bep.cs" />
+    <Compile Include="ChiTietDonHang_DTO.cs" />
+    <Compile Include="ChiTietPhieuNhap_DTO.cs" />
     <Compile Include="Class1.cs" />
+    <Compile Include="DonHang_DTO.cs" />
+    <Compile Include="HinhThucTT_DTO.cs" />
+    <Compile Include="KhuyenMai_DTO.cs" />
+    <Compile Include="KiemTraChatLuong_DTO.cs" />
+    <Compile Include="LoaiMonAn_DTO.cs" />
+    <Compile Include="MonAn_DTO.cs" />
+    <Compile Include="MonAn_MaDH_DTO.cs" />
+    <Compile Include="NguyenVatLieu_DTO.cs" />
+    <Compile Include="NhanVien_DTO.cs" />
+    <Compile Include="PhieuNhap_DTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ThanhToan_DTO.cs" />
+    <Compile Include="ThongTinDinhDuong_DTO.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -112,17 +112,8 @@ namespace DataLayer
             {
                 Connect();
 
-                // Tìm ID nhỏ nhất chưa được sử dụng
-                string sqlNextId = @"
-            SELECT ISNULL(MIN(t1.MaPhieuNhap + 1), 1)
-            FROM PhieuNhapKho t1
-            WHERE NOT EXISTS (
-                SELECT 1 FROM PhieuNhapKho t2
-                WHERE t2.MaPhieuNhap = t1.MaPhieuNhap + 1
-            )";
-
-                SqlCommand cmdNextId = new SqlCommand(sqlNextId, cn);
-                int newId = Convert.ToInt32(cmdNextId.ExecuteScalar());
+                // Sử dụng kế thừa phương thức tiện ích để tìm ID trống nhỏ nhất DataProvider
+                int newId = Find_Id_Update("PhieuNhapKho", "MaPhieuNhap");
 
                 // Bật IDENTITY_INSERT để có thể chèn giá trị ID cụ thể
                 SqlCommand cmdSetIdentityInsert = new SqlCommand("SET IDENTITY_INSERT PhieuNhapKho ON", cn);

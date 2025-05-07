@@ -10,7 +10,7 @@ namespace DataLayer
 {
     public class KiemTraChatLuong_DAL : DataProvider
     {
-        // lay danh sach kiem tra chat luong
+        // Lấy danh sách kiểm tra chất lượng
         public List<KiemTraChatLuong_DTO> GetKiemTraChatLuongList()
         {
             string sql = @"SELECT kt.MaKiemTra, kt.LoaiKiemTra, kt.DoiTuongKiemTra, 
@@ -61,7 +61,7 @@ namespace DataLayer
             }
         }
 
-        // lay thong tin theo ma kiem tra
+        // Lấy thông tin theo mã kiểm tra
         public KiemTraChatLuong_DTO GetKiemTraById(string maKiemTra)
         {
             string sql = @"SELECT kt.MaKiemTra, kt.LoaiKiemTra, kt.DoiTuongKiemTra, 
@@ -113,17 +113,26 @@ namespace DataLayer
             }
         }
 
-        //them phieu kiem tra chat luong
+        // Thêm phiếu kiểm tra chất lượng 
         public bool AddKiemTraChatLuong(KiemTraChatLuong_DTO kiemTra)
         {
-            string sql = @"INSERT INTO KiemTraChatLuong (MaKiemTra, LoaiKiemTra, DoiTuongKiemTra, 
-                       NgayKiemTra, NguoiKiemTra, TieuChiKiemTra, GiaTri, DonVi, KetQua, GhiChu, HinhAnh)
-                VALUES (@MaKiemTra, @LoaiKiemTra, @DoiTuongKiemTra, @NgayKiemTra, @NguoiKiemTra, 
-                        @TieuChiKiemTra, @GiaTri, @DonVi, @KetQua, @GhiChu, @HinhAnh)";
-
             try
             {
+                // Tạo mã kiểm tra mới
+                kiemTra.MaKiemTra = CreateNewMa();
+                Console.WriteLine("Ma kiem tra moi: " + kiemTra.MaKiemTra);
+
+                // Sử dụng ExecuteNonQuery thay vì ExecuteScalar để thêm dữ liệu
                 Connect();
+                string sql = @"INSERT INTO KiemTraChatLuong (
+                        MaKiemTra, LoaiKiemTra, DoiTuongKiemTra, NgayKiemTra, 
+                        NguoiKiemTra, TieuChiKiemTra, GiaTri, DonVi, 
+                        KetQua, GhiChu, HinhAnh)
+                    VALUES (
+                        @MaKiemTra, @LoaiKiemTra, @DoiTuongKiemTra, @NgayKiemTra, 
+                        @NguoiKiemTra, @TieuChiKiemTra, @GiaTri, @DonVi, 
+                        @KetQua, @GhiChu, @HinhAnh)";
+
                 SqlCommand cmd = new SqlCommand(sql, cn);
                 cmd.Parameters.AddWithValue("@MaKiemTra", kiemTra.MaKiemTra);
                 cmd.Parameters.AddWithValue("@LoaiKiemTra", kiemTra.LoaiKiemTra);
@@ -164,6 +173,8 @@ namespace DataLayer
             }
             catch (SqlException ex)
             {
+                Console.WriteLine("Loi SQL trong AddKiemTraChatLuong: " + ex.Message);
+                Console.WriteLine("SQL Error Number: " + ex.Number);
                 throw ex;
             }
             finally
@@ -172,7 +183,7 @@ namespace DataLayer
             }
         }
 
-        // cap nhat phieu kiem tra chat luong
+        // Cập nhật phiếu kiểm tra chất lượng
         public bool UpdateKiemTraChatLuong(KiemTraChatLuong_DTO kiemTra)
         {
             string sql = @"UPDATE KiemTraChatLuong SET 
@@ -239,7 +250,7 @@ namespace DataLayer
             }
         }
 
-        // xoa phieu kiem tra chat luong
+        // Xóa phiếu kiểm tra chất lượng
         public bool DeleteKiemTraChatLuong(string maKiemTra)
         {
             string sql = @"DELETE FROM KiemTraChatLuong WHERE MaKiemTra = @MaKiemTra";
@@ -261,23 +272,27 @@ namespace DataLayer
             }
         }
 
-        //Tao ma kiem tra moi tu dong
+        // Tạo mã kiểm tra mới tự động 
         public string CreateNewMa()
         {
-            string sql = "SELECT MAX(CAST(SUBSTRING(MaKiemTra, 3, LEN(MaKiemTra) - 2) AS INT)) FROM KiemTraChatLuong WHERE MaKiemTra LIKE 'KT%'";
-
             try
             {
                 Connect();
-                object result = MyExecuteScalar(sql, CommandType.Text);
 
-                int lastNumber = 0;
-                if (result != null && result != DBNull.Value)
+                // Sử dụng stored procedure để tạo mã mới
+                SqlCommand cmd = new SqlCommand("SP_TaoMaKiemTraMoi", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                // Thực thi stored procedure và lấy kết quả từ SqlDataReader
+                SqlDataReader reader = cmd.ExecuteReader();
+                string newMaKiemTra = "KT001"; // Giá trị mặc định
+
+                if (reader.Read())
                 {
-                    lastNumber = Convert.ToInt32(result);
+                    newMaKiemTra = reader["MaKiemTraMoi"].ToString();
                 }
 
-                string newMaKiemTra = "KT" + (lastNumber + 1).ToString("000"); // KT001, KT002, etc.
+                reader.Close();
                 return newMaKiemTra;
             }
             catch (SqlException ex)
@@ -290,7 +305,7 @@ namespace DataLayer
             }
         }
 
-        // Kiem tra nhan vien ton tai
+        // Kiểm tra nhân viên tồn tại
         public bool KiemTraNhanVienTonTai(int maNhanVien)
         {
             try

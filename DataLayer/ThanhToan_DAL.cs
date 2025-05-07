@@ -71,28 +71,5 @@ namespace DataLayer
                DisConnect();
             }
         }
-        public List<HoaDonTT_DTO> GetHD()
-        {
-            List<HoaDonTT_DTO> lst = new List<HoaDonTT_DTO>();
-            string sql = "SELECT ThanhToan.MaDonHang, ThanhToan.MaThanhToan, Ban.TenBan, NhanVien.HoTen, ThanhToan.NgayThanhToan, DonHang.MaTrangThai, ThanhToan.SoTien, HinhThucThanhToan.TenHinhThuc FROM  ThanhToan INNER JOIN NhanVien ON ThanhToan.MaNhanVien = NhanVien.MaNhanVien INNER JOIN DonHang ON ThanhToan.MaDonHang = DonHang.MaDonHang INNER JOIN Ban ON DonHang.MaBan = Ban.MaBan INNER JOIN HinhThucThanhToan ON ThanhToan.MaHinhThuc = HinhThucThanhToan.MaHinhThuc ";
-            SqlDataReader dr = MyExecuteReader(sql, CommandType.Text);
-            while (dr.Read())
-            {
-                var hoaDonTT = new HoaDonTT_DTO(
-                    dr.GetInt32(0), // MaDonHang
-                    dr.GetInt32(1), // MaThanhToan
-                    dr.IsDBNull(2) ? string.Empty : dr.GetString(2), // TenBan
-                    dr.IsDBNull(3) ? string.Empty : dr.GetString(3), // HoTen
-                    dr.GetDateTime(4), // NgayThanhToan
-                    dr.GetInt32(5), // MaTrangThai
-                    (float)dr.GetDouble(6), // SoTien
-                    dr.IsDBNull(7) ? string.Empty : dr.GetString(7) // TenHinhThuc
-                );
-                lst.Add(hoaDonTT);
-            }
-            dr.Close();
-            return lst;
-        }
-
     }
 }
