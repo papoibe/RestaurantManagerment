@@ -78,7 +78,6 @@ namespace PresentationLayer
             {
                 dgv_DonHang.Rows.Add(monAn.MaChiTiet, monAn.TenMonAn, monAn.SoLuong, monAn.DonGia, monAn.ThanhTien, monAn.GhiChu);
             }
-            //ThanhToan_DTO
         }
 
         // các hàm liên quan đến chức năng trong form
@@ -399,7 +398,7 @@ namespace PresentationLayer
         private void SetDishImage(Button btn, MonAn_DTO monAn)
         {
             // Tạo đường dẫn đến hình ảnh của món ăn
-            string imagePath = Path.Combine(@"D:\IMPORTAN\RestaurantManagerment\PresentationLayer\picture\monAn", $"{monAn.MaMonAn}.png");
+            string imagePath = Path.Combine(@"E:\RestaurantManager\RestaurantManagerment\PresentationLayer\picture\monAn", $"{monAn.MaMonAn}.png");
             if (File.Exists(imagePath)) // Kiểm tra nếu file hình ảnh tồn tại
             {
                 using (var stream = new MemoryStream(File.ReadAllBytes(imagePath))) // Đọc file ảnh vào MemoryStream

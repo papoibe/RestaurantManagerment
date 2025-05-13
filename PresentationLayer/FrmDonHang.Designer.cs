@@ -35,7 +35,6 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmDonHang));
             this.fLP_Menu = new System.Windows.Forms.FlowLayoutPanel();
             this.gBHinhThucTT = new System.Windows.Forms.GroupBox();
             this.txt_SoTien = new System.Windows.Forms.TextBox();
@@ -780,7 +779,7 @@
             // 
             // pictureBox3
             // 
-            this.pictureBox3.Image = global::PresentationLayer.Properties.Resources.picture_Ban1;
+            this.pictureBox3.Image = global::PresentationLayer.Properties.Resources.picture_Ban;
             this.pictureBox3.Location = new System.Drawing.Point(3, 3);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(60, 60);
@@ -800,7 +799,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Image = global::PresentationLayer.Properties.Resources.picture_lich;
             this.pictureBox1.Location = new System.Drawing.Point(557, 3);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(79, 64);
@@ -810,7 +809,7 @@
             // 
             // pictureBox2
             // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Image = global::PresentationLayer.Properties.Resources.picture_DongHo;
             this.pictureBox2.Location = new System.Drawing.Point(852, 3);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(65, 57);

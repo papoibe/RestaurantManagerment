@@ -17,6 +17,9 @@ namespace PresentationLayer
     {
         private Account_BL accountBL;
         private string captchaText = "";
+
+        // event tự định nghĩa đăng nhập thành công 
+        public event EventHandler<Account_DTO> DangNhapThanhCong;
         public FrmLogin()
         {
             InitializeComponent();
@@ -108,6 +111,8 @@ namespace PresentationLayer
                 //kiem tra dang nhap thanh cong
                 if (accountDTO != null)
                 {
+                    // Thông báo đăng nhập thành công
+                    DangNhapThanhCong?.Invoke(this, accountDTO);
                     //neu dang nhap thanh cong, xac dinh ma loai
                     //neu ma loai = 1 thi la admin
                     //neu ma loai = 2 thi la nhan vien
@@ -171,13 +176,26 @@ namespace PresentationLayer
 
         private void btn_exit_Click(object sender, EventArgs e)
         {
-            this.Close();
+
+            DialogResult result = MessageBox.Show("Bạn có muốn thoát không?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                 // đóng form
+                 this.Close();
+            }    
+           
         }
 
         private void btn_DangKi_Click(object sender, EventArgs e)
         {
             FrmDangKy frmDangKy = new FrmDangKy();
             frmDangKy.ShowDialog();
+        }
+
+        private void FrmLogin_FormClosed(object sender, FormClosedEventArgs e)
+        {
+
         }
     }
 }
